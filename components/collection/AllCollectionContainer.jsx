@@ -6,17 +6,42 @@ import { InputText } from 'primereact/inputtext';
 import { collectionServiceObj } from '../../services/collectionService';
 import {priceBodyTemplate} from "../common/Helper"
 import { useRouter } from 'next/router';
+import { useGlobalData } from '../../contexts/GlobalContext';
 
 
 const AllCollectionContainer = () => {
   const [showSRModal,setShowSRModal]=useState(false)
   const [collectionSummary,setCollectionSummary]=useState({})
   const [exceedLimit,setExceedLimit]=useState(false)
+  const [SRNumber,setSRNumber]=useState("")
+  const [loadingSRBtn,setLoadingSRBtn]=useState(false)
   const router = useRouter();
+  const {setSRDetails}=useGlobalData()
+
 
   useEffect(()=>{
     getAllCollection()
   },[])
+
+  const getSRDetails = async()=>{
+    
+    //const response = await collectionServiceObj.getSRDetails(SRNumber)
+    
+    const response= {
+      store_name: "ASM Adalhatu Morabadi",
+      store_id: 4,
+      request_id: 1,
+      instrument_mode_tag: "CSH",
+      instrument_mode: "Cash",
+      request_date: "2022-12-13T14:33:52Z",
+      status_tag: "CRQ",
+      status: "Collection requested"
+    }
+
+    setSRDetails(response)
+    router.push("/pending-request")
+    
+  }
 
   const getAllCollection = async () => {
     //const response = await collectionServiceObj.getCollectionSummary()
@@ -39,21 +64,13 @@ const AllCollectionContainer = () => {
     }else{
       setExceedLimit(false)
     }
-
     setCollectionSummary(response)
   };
 
   
 
 
-  const renderFooter = () => {
-    return (
-      <div className='mx-auto text-center mt-2'>
-          <Button label="Submit" icon="pi pi-check" className='p-button-info'/>
-      </div>
-    );
-  }
-  console.log('coll',collectionSummary)
+  
 
   const goToListInHandPage=()=>{
     router.push(`/collection/in-hand-collection`)
@@ -109,7 +126,7 @@ const AllCollectionContainer = () => {
           </div>
         </div>
 
-        <div className='bottom-6 absolute left-0 right-0 mx-auto'>
+        <div className='bottom-8 absolute left-0 right-0 mx-auto'>
         <Button label='Enter SR Number' className='p-button-info' icon="pi pi-external-link" onClick={() => setShowSRModal(true)} />
         <Dialog 
           header="Enter SR Number" 
@@ -117,11 +134,23 @@ const AllCollectionContainer = () => {
           onHide={() => setShowSRModal(false)} 
           breakpoints={{'960px': '75vw'}} 
           style={{width: '90vw'}}
-          footer={renderFooter('displayResponsive')} 
           >
           <div className='pt-4'>
-          <InputText style={{width:"75vw"}}/>
+            <InputText 
+              style={{width:"75vw"}}
+              value={SRNumber}
+              onChange={(e)=>setSRNumber(e.target.value)}
+              />
           </div>
+          <div className='mx-auto text-center mt-8'>
+            <Button 
+             label="Submit" 
+             icon="pi pi-check" 
+             loading={loadingSRBtn}
+             className='p-button-info'
+             onClick={getSRDetails}
+             />
+         </div>
         </Dialog>
         {/* <Button className='p-button-info' label='Enter SR Number'/> */}
         </div>

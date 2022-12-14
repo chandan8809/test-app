@@ -1,6 +1,5 @@
 import { apiGetCall, apiPostCall, apiPutCall, apiPatchCall, apiDeleteCall } from '../config/apiConfig';
-import {GET_WAREHOUSES_LIST_URL ,
-        LOGIN_URL} from '../config/urlConfig'
+import { LOGIN_URL } from '../config/urlConfig'
 
 
 class AuthService {
@@ -11,15 +10,11 @@ class AuthService {
         this.apiPatchCall=apiPatchCall,
         this.apiDeleteCall=apiDeleteCall
     } 
-
-
     login = async(body)=>{
         const url=LOGIN_URL
         const response = await this.apiPutCall(url,body)
         return response
     }
-
-
 }
 
 export default AuthService

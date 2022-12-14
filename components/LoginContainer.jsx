@@ -46,7 +46,7 @@ const LoginContainer = () => {
       <Toast ref={toast} position="bottom-center"/>
         <span className="p-float-label" >
           <InputText 
-             style={{width:"270px"}}
+             style={{width:"233px"}}
              id="username" 
              value={username}
              onChange={(e)=>setUsername(e.target.value)}
@@ -56,7 +56,7 @@ const LoginContainer = () => {
 
         <span className="p-float-label mt-8" >
           <Password 
-            style={{width:"270px"}} 
+            style={{width:"233px"}} 
             value={password} 
             onChange={(e) => setPassword(e.target.value)} 
             feedback={false} 

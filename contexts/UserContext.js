@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
       success: false,
       error: false,
     };
-    console.log("respjd",response)
+
 
     if (response.ok) {
       const userData = response.data;

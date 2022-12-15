@@ -13,51 +13,54 @@ const ListPendingCollectionContainer = () => {
   const router = useRouter();
 
   useEffect(()=>{
-    getInHandCollectionList()
+    getCollectionListPending()
   },[])
 
  
-  const getInHandCollectionList= async()=>{
-    // const response= await collectionServiceObj.getCollectionListPending()
-    const response=[
-      {
-        id: 1,
-        source_id: 4,
-        status: "Collection requested",
-        requested_at: "2022-12-13T14:33:52Z",
-        completed_at: null,
-        instrument_mode: "Cash",
-        collected_amount: 100.0,
-        status_tag: "CRQ",
-        instrument_mode_tag: "CSH",
-        source_name: "ASM Adalhatu Morabadi"
-      },
-      {
-        id: 1,
-        source_id: 4,
-        status: "Collection requested",
-        requested_at: "2022-12-13T14:33:52Z",
-        completed_at: null,
-        instrument_mode: "Cash",
-        collected_amount: 2000.0,
-        status_tag: "CRQ",
-        instrument_mode_tag: "CSH",
-        source_name: "ASM Adalhatu Morabadi"
-      },
-      {
-        id: 1,
-        source_id: 4,
-        status: "Collection requested",
-        requested_at: "2022-12-13T14:33:52Z",
-        completed_at: "2022-12-13T14:33:52Z",
-        instrument_mode: "Cheque",
-        collected_amount: 30000.0,
-        status_tag: "CRQ",
-        instrument_mode_tag: "CSH",
-        source_name: "ASM Adalhatu Morabadi ASM Adalhatu Morabadi"
-      }
-    ]
-    setInHandCollectionList(response)
+  const getCollectionListPending= async()=>{
+    const response= await collectionServiceObj.getCollectionListPending()
+    // const response=[
+    //   {
+    //     id: 1,
+    //     source_id: 4,
+    //     status: "Collection requested",
+    //     requested_at: "2022-12-13T14:33:52Z",
+    //     completed_at: null,
+    //     instrument_mode: "Cash",
+    //     collected_amount: 100.0,
+    //     status_tag: "CRQ",
+    //     instrument_mode_tag: "CSH",
+    //     source_name: "ASM Adalhatu Morabadi"
+    //   },
+    //   {
+    //     id: 1,
+    //     source_id: 4,
+    //     status: "Collection requested",
+    //     requested_at: "2022-12-13T14:33:52Z",
+    //     completed_at: null,
+    //     instrument_mode: "Cash",
+    //     collected_amount: 2000.0,
+    //     status_tag: "CRQ",
+    //     instrument_mode_tag: "CSH",
+    //     source_name: "ASM Adalhatu Morabadi"
+    //   },
+    //   {
+    //     id: 1,
+    //     source_id: 4,
+    //     status: "Collection requested",
+    //     requested_at: "2022-12-13T14:33:52Z",
+    //     completed_at: "2022-12-13T14:33:52Z",
+    //     instrument_mode: "Cheque",
+    //     collected_amount: 30000.0,
+    //     status_tag: "CRQ",
+    //     instrument_mode_tag: "CSH",
+    //     source_name: "ASM Adalhatu Morabadi ASM Adalhatu Morabadi"
+    //   }
+    // ]
+    if(response.ok){
+      const responseData=response.data
+      setInHandCollectionList(responseData)
+    }
   }
 
   return (

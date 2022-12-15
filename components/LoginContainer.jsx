@@ -18,7 +18,7 @@ const LoginContainer = () => {
   const handleSubmit=async()=>{
     setLoadingBtn(true)
     const loginResponse = await login(username,password);
-    console.log("loginRes",userData)
+
     setLoadingBtn(false)
     
     const { success, error } = loginResponse ?? {};
@@ -33,13 +33,11 @@ const LoginContainer = () => {
     }
   }
   const toast = useRef(null);
-
- 
   const showError = () => {
     toast.current.show({severity:'error', summary: 'Error', detail:'Wrong Username Or Password', life: 3000});
   }
 
-  console.log("loginRes",username)
+
 
   return (
     <div className='pt-20 flex flex-col items-center'>

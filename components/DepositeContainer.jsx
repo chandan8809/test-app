@@ -4,12 +4,19 @@ import { InputNumber } from 'primereact/inputnumber'
 import React, { useState } from 'react'
 import moment from "moment"
 import { useRouter } from 'next/router';
-import { useGlobalData } from '../contexts/GlobalContext';
 import { collectionServiceObj } from '../services/collectionService'
 import { priceBodyTemplate } from './common/Helper'
+import Camera from './camera'
+import { Dialog } from 'primereact/dialog'
+import { useGlobalData } from '../contexts/GlobalContext'
 
 const DepositeContainer = () => {
+  const [showSRModal,setShowSRModal]=useState(false)
   const [referenceNo,setReferenceNo]=useState(null)
+  const {moneyDepositeUrl,setMoneyDepositeUrl}=useGlobalData()
+
+  console.log("delo",moneyDepositeUrl)
+
   const router=useRouter()
   //const {depositeRequestDetails}=useGlobalData()
   const depositeRequestDetails= {
@@ -28,7 +35,7 @@ const DepositeContainer = () => {
     status: "Collection in progress"
    }
 
-  console.log("del",depositeRequestDetails)
+ 
   //const {SRDetails}=useGlobalData()
   const SRDetails={
     store_name: "ASM Adalhatu Morabadi",
@@ -40,17 +47,14 @@ const DepositeContainer = () => {
     status_tag: "CRQ",
     status: "Collection requested"
   }
-  console.log("srDt",SRDetails)
+
 
   const updateCollectionRequestDeposited = async() =>{
     const formData = new FormData();
     formData.append("status", "CDP");
-    formData.append("file", "fileData");
+    formData.append("file", moneyDepositeUrl);
+    formData.append("ref_no",referenceNo)
 
-    if(SRDetails.instrument_mode_tag === "CHQ"){
-      formData.append("ref_no", "123455");
-     
-    }
     const response= await collectionServiceObj.updateCollectionRequestDeposited(SRDetails?.request_id, formData, {"Content-Type" : "multipart/form-data"})
   }
 
@@ -106,39 +110,78 @@ const DepositeContainer = () => {
         <p className='text-[16px]'>{depositeRequestDetails?.beneficiary_name}</p>
       </div>
 
-      {depositeRequestDetails.instrument_mode_tag=="CHQ" && <div className='flex flex-col p-2'>
+      <div className='flex flex-col p-2'>
         <p className='text-sm'>Reference Number</p>
         <InputNumber 
             value={referenceNo} 
             onChange={(e) => setReferenceNo(e.value)}   
             useGrouping={false}
             />
-      </div>}
+      </div>
 
       <div className='flex flex-col p-2'>
         <p className='text-sm'>Deposite Slip Image</p>
-        <div className='flex items-center gap-2'>
-        <Image 
-          src='/openCamera.svg' 
-          alt='Tez POS Logo' 
-          width={34} 
-          height={34} 
-          onClick={()=> router.push(`/collection/in-hand-collection`)}
-          />
-        <h1 className='text-sm text-blue-700'>Upload File or Open Camera</h1>
-      </div>
+        <div 
+          className='flex items-center gap-2'
+          
+          >
+          <Image 
+            src='/openCamera.svg' 
+            alt='Tez POS Logo' 
+            width={34} 
+            height={34}
+            
+            />
+            
+          <h1 
+            onClick={() => setShowSRModal(true)} 
+            className='text-sm text-blue-700'>{moneyDepositeUrl ? "Dummy Image name" : "Upload File or Open Camera"}
+          </h1>
+
+          {moneyDepositeUrl && <Button 
+            onClick={() => {
+              setMoneyDepositeUrl(null)
+              }} 
+            icon="pi pi-times" 
+            className="p-button-rounded p-button-danger p-button-text" 
+            aria-label="Cancel"
+          />}
+            
+        </div>
       </div>
      
     </div>
     <div className='text-center  bottom-0 left-0 right-0 mx-auto'>
       <Button 
-        disabled={!referenceNo}
+        disabled={!referenceNo || !moneyDepositeUrl}
         label='Deposite' 
         className='p-button-info'
         onClick={updateCollectionRequestDeposited}
         />
     </div>
-    
+
+      <div className='bottom-8 absolute left-0 right-0 mx-auto'>
+        <Dialog 
+          header="Click Picture" 
+          visible={showSRModal} 
+          onHide={() => {
+            setShowSRModal(false)
+            setMoneyDepositeUrl(null)
+          }} 
+          breakpoints={{'960px': '75vw'}} 
+          style={{width: '90vw',minHeight:"400px"}}
+          position={'top'}
+          >
+          <div className='mx-auto text-center mt-6'>
+            <Camera/>
+         </div>
+         <div className='text-center pt-8'>
+         {moneyDepositeUrl && <Button onClick={() => setShowSRModal(false)} label='Done' className=' p-button-success'/>}
+         </div>
+         
+        </Dialog>
+        {/* <Button className='p-button-info' label='Enter SR Number'/> */}
+      </div>
 </div>
     
   )

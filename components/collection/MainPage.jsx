@@ -16,7 +16,7 @@ const MainPage = () => {
   const [SRNumber,setSRNumber]=useState("")
   const [loadingSRBtn,setLoadingSRBtn]=useState(false)
   const router = useRouter();
-  const {setSRDetails}=useGlobalData()
+  const {setSRDetails,setGlobalLoader,globalLoader}=useGlobalData()
 
 
   useEffect(()=>{
@@ -24,47 +24,59 @@ const MainPage = () => {
   },[])
 
   const getSRDetails = async()=>{
+    setGlobalLoader(true)
+    const response = await collectionServiceObj.getSRDetails(SRNumber)
     
-    //const response = await collectionServiceObj.getSRDetails(SRNumber)
-    
-    const response= {
-      store_name: "ASM Adalhatu Morabadi",
-      store_id: 4,
-      request_id: 1,
-      instrument_mode_tag: "CSH",
-      instrument_mode: "Cash",
-      request_date: "2022-12-13T14:33:52Z",
-      status_tag: "CRQ",
-      status: "Collection requested"
+    // const response= {
+    //   store_name: "ASM73374 Adalhatu Morabadi",
+    //   store_id: 4,
+    //   request_id: 1,
+    //   instrument_mode_tag: "CSH",
+    //   instrument_mode: "Cash",
+    //   request_date: "2022-12-13T14:33:52Z",
+    //   status_tag: "CRQ",
+    //   status: "Collection requested"
+    // }
+   
+    if(response.ok){
+      const responseData=response.data
+      console.log("yt",responseData)
+      setSRDetails(responseData)
+      router.push("/payment-collection")
     }
-
-    setSRDetails(response)
-    router.push("/payment-collection")
+   
+    setGlobalLoader(false)
     
   }
 
   const getAllCollection = async () => {
-    //const response = await collectionServiceObj.getCollectionSummary()
-    const response = {
-      cash: {
-          count: 4,
-          amount: 10000,
-          n_stores:3
-       },
-      cheque: {
-          count: 4,
-          amount: 10000,
-          n_stores:4
-      },
-      limit: 100
+    setGlobalLoader(true)
+    let response = await collectionServiceObj.getCollectionSummary()
+    // const response = {
+    //   cash: {
+    //       count: 4,
+    //       amount: 10000,
+    //       n_stores:3
+    //    },
+    //   cheque: {
+    //       count: 4,
+    //       amount: 10000,
+    //       n_stores:4
+    //   },
+    //   limit: 100
+    // }
+    if(response.ok){
+      const responseData=response.data
+      if(responseData?.cash?.amount > responseData?.limit){
+        setExceedLimit(true)
+      }else{
+        setExceedLimit(false)
+      }
+      setCollectionSummary(responseData)
     }
+     setGlobalLoader(false)
 
-    if(response?.cash?.amount > response?.limit){
-      setExceedLimit(true)
-    }else{
-      setExceedLimit(false)
-    }
-    setCollectionSummary(response)
+    
   };
 
   

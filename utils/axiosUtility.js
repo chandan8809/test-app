@@ -15,7 +15,7 @@ export const setDefaultAxiosHeaders = () => {
 export const setAxiosDefaultTokenFromLocalStorage = () => {
     if (typeof window !== 'undefined') {
         const userData = JSON.parse(localStorage.getItem('user')??'{}');
-        console.log("userData",userData)
+        
         if(userData?.token){
             setCommonAuthorizationToken(userData?.token);
         }

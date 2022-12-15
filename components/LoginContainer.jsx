@@ -2,16 +2,17 @@ import React, { useRef, useState } from 'react'
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { useAuth } from '../contexts/UserContext';
-import { Toast } from 'primereact/toast';
+
 import { Password } from 'primereact/password';
 import { useRouter } from 'next/router';
+import { notify } from './Notify';
 
 const LoginContainer = () => {
   const [username,setUsername]=useState("")
   const [password,setPassword]=useState("")
   const [loadingBtn,setLoadingBtn]=useState(false)
   const [errorLogin,setErrorLogin]=useState(false)
-  const { login, userData, setUserData } = useAuth();
+  const { login } = useAuth();
   const router = useRouter();
 
 
@@ -23,25 +24,24 @@ const LoginContainer = () => {
     
     const { success, error } = loginResponse ?? {};
     if (error) {
-      showError()
+      notify("error","wrong password or username")
       setErrorLogin(true)
     
     } else if (success) {
+     
       setErrorLogin(false)
       router.push(`/collection`)
       
     }
   }
-  const toast = useRef(null);
-  const showError = () => {
-    toast.current.show({severity:'error', summary: 'Error', detail:'Wrong Username Or Password', life: 3000});
-  }
+  
+ 
 
 
 
   return (
     <div className='pt-20 flex flex-col items-center'>
-      <Toast ref={toast} position="bottom-center"/>
+      {/* <Toast ref={toast} position="bottom-center"/> */}
         <span className="p-float-label" >
           <InputText 
              style={{width:"233px"}}

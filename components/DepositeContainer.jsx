@@ -10,29 +10,33 @@ import Camera from './camera'
 import { Dialog } from 'primereact/dialog'
 import { useGlobalData } from '../contexts/GlobalContext'
 import { InputText } from 'primereact/inputtext'
+import { notify } from './Notify';
 
 const DepositeContainer = () => {
   const [showSRModal,setShowSRModal]=useState(false)
   const [referenceNo,setReferenceNo]=useState(null)
   const [file, setFile] = useState()
-  const {moneyDepositeUrl,setMoneyDepositeUrl,depositeRequestDetails}=useGlobalData()
-
+  const {moneyDepositeUrl,setMoneyDepositeUrl,depositeRequestDetails,setGlobalLoader}=useGlobalData()
+  const inputRef=useRef()
 
   const router=useRouter()
-  
-
-
- 
-
-
 
   const updateCollectionRequestDeposited = async() =>{
+    setGlobalLoader(true)
     const formData = new FormData();
     formData.append("status", "CDP");
     formData.append("file", file);
     formData.append("ref_no",referenceNo)
 
     const response= await collectionServiceObj.updateCollectionRequestDeposited(depositeRequestDetails?.request_id, formData, {"Content-Type" : "multipart/form-data"})
+    if(response.ok){
+      const responseData=response.data
+    }
+    else{
+      const error=response.error
+      notify("error",error.error_message)
+    }
+    setGlobalLoader(false)
     
   }
 

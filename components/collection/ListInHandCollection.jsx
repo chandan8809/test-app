@@ -5,27 +5,35 @@ import { collectionServiceObj } from '../../services/collectionService';
 import moment from "moment"
 import { useRouter } from 'next/router';
 import { useGlobalData } from '../../contexts/GlobalContext';
+import { notify } from '../Notify';
 
 const ListInHandCollection = () => {
   const [inHandCollectionList,setInHandCollectionList]=useState([])
   const router = useRouter();
-  const {setDepositeRequestDetails}=useGlobalData()
+  const {setDepositeRequestDetails,setGlobalLoader}=useGlobalData()
 
   useEffect(()=>{
     getInHandCollectionList()
   },[])
 
   const getInHandCollectionList= async()=>{
+    setGlobalLoader(true)
     const response= await collectionServiceObj.getCollectionListingInHand()
    
     if(response.ok){
       const responseData=response.data
       setInHandCollectionList(responseData)
     }
+    else{
+      const error=response.error
+      notify("error",error.error_message)
+    }
+    setGlobalLoader(false)
  
   }
 
   const getDepositeRequestDetails = async(request_id)=>{
+    setGlobalLoader(true)
      const response = await collectionServiceObj.depositeRequestDetails(request_id)
 
     if(response.ok){
@@ -33,6 +41,11 @@ const ListInHandCollection = () => {
       setDepositeRequestDetails(responseData)
       gotoDepositePage()
     }
+    else{
+      const error=response.error
+      notify("error",error.error_message)
+    }
+    setGlobalLoader(false)
   }
 
   const gotoDepositePage=()=>{

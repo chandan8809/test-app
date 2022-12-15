@@ -9,6 +9,7 @@ import { collectionServiceObj } from '../services/collectionService';
 import { Dialog } from 'primereact/dialog';
 import Camera from './camera';
 import { Toast } from 'primereact/toast';
+import { notify } from './Notify';
 
 
 const PaymentCollectionContainer = () => {
@@ -17,7 +18,9 @@ const PaymentCollectionContainer = () => {
   const [collectedAmount,setCollectedAmount]=useState(null)
   const [cameraModal,setCameraModal]=useState(false)
   const router=useRouter()
-  const {moneyDepositeUrl,setMoneyDepositeUrl,SRDetails}=useGlobalData()
+  const {moneyDepositeUrl,setMoneyDepositeUrl,SRDetails,setGlobalLoader}=useGlobalData()
+  const inputRef=useRef()
+  const [file, setFile] = useState()
 
   useEffect(() => {
     if(startTimer)
@@ -33,17 +36,27 @@ const PaymentCollectionContainer = () => {
   }
 
   const resendOTPcall=async()=>{
+    setGlobalLoader(true)
     const response = await collectionServiceObj.resendOTP(SRDetails?.request_id)
+    if(response.ok){
+      const responseData=response.data
+    }
+    else{
+      const error=response.error
+      notify("error",error.error_message)
+    }
+    setGlobalLoader(false)
   }
 
   const updateCollectionRequestUpdate = async() =>{
+    setGlobalLoader(true)
     const formData = new FormData();
     formData.append("status", "CBP");
     formData.append("collected_amount", collectedAmount);
 
     if(SRDetails.instrument_mode_tag === "CHQ"){
       formData.append("instrument_id",SRDetails?.instrument_id );
-      formData.append("file", moneyDepositeUrl);
+      formData.append("file", file);
     }
     
     const response= await collectionServiceObj.updateCollectionRequestPicked(SRDetails?.request_id, formData, {"Content-Type" : "multipart/form-data"})
@@ -52,8 +65,9 @@ const PaymentCollectionContainer = () => {
     }
     else{
       const error=response.error
-      showError()
+      notify("error",error)
     }
+    setGlobalLoader(false)
   }
 
   const onDepositeButtonClick=()=>{
@@ -69,7 +83,9 @@ const PaymentCollectionContainer = () => {
     }
   }
 
-  
+  function handleFileChange(event) {
+    setFile(event.target.files[0])
+  }
 
   
   return (
@@ -135,36 +151,46 @@ const PaymentCollectionContainer = () => {
             />
       </div>
 
-     {SRDetails.instrument_mode_tag ==="CHQ" && <div className='flex flex-col p-2'>
-        <p className='text-sm'>Cheque Image</p>
-        <div 
-          className='flex items-center gap-2'
+     {SRDetails.instrument_mode_tag ==="CHQ" && 
+      <div className="form-group flex flex-col p-2">
+          <label htmlFor="invoiceNumber" className='text-m text-gray'  >
+            Image upload
+          </label>
+          <input id="fileInput" type="file" ref={inputRef}
+          onChange={handleFileChange}/>
+      </div>
+      // <div className='flex flex-col p-2'>
+      //   <p className='text-sm'>Cheque Image</p>
+      //   <div 
+      //     className='flex items-center gap-2'
           
-          >
-          <Image 
-            src='/openCamera.svg' 
-            alt='Tez POS Logo' 
-            width={34} 
-            height={34}
+      //     >
+      //     <Image 
+      //       src='/openCamera.svg' 
+      //       alt='Tez POS Logo' 
+      //       width={34} 
+      //       height={34}
             
-            />
+      //       />
             
-          <h1 
-            onClick={() => setCameraModal(true)} 
-            className='text-sm text-blue-700'>{moneyDepositeUrl ? "Dummy Image name" : "Upload File or Open Camera"}
-          </h1>
+      //     <h1 
+      //       onClick={() => setCameraModal(true)} 
+      //       className='text-sm text-blue-700'>{moneyDepositeUrl ? "Dummy Image name" : "Upload File or Open Camera"}
+      //     </h1>
 
-          {moneyDepositeUrl && <Button 
-            onClick={() => {
-              setMoneyDepositeUrl(null)
-              }} 
-            icon="pi pi-times" 
-            className="p-button-rounded p-button-danger p-button-text" 
-            aria-label="Cancel"
-          />}
+      //     {moneyDepositeUrl && <Button 
+      //       onClick={() => {
+      //         setMoneyDepositeUrl(null)
+      //         }} 
+      //       icon="pi pi-times" 
+      //       className="p-button-rounded p-button-danger p-button-text" 
+      //       aria-label="Cancel"
+      //     />}
             
-        </div>
-      </div>}
+      //   </div>
+      // </div>
+
+      }
 
       <div className='bottom-8 absolute left-0 right-0 mx-auto'>
         <Dialog 

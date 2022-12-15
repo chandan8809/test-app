@@ -5,12 +5,15 @@ import { collectionServiceObj } from '../../services/collectionService';
 import moment from "moment"
 import { Button } from 'primereact/button';
 import { useRouter } from 'next/router';
+import { useGlobalData } from '../../contexts/GlobalContext';
+import { notify } from '../Notify';
 
 
 
 const ListPendingCollectionContainer = () => {
   const [inHandCollectionList,setInHandCollectionList]=useState([])
   const router = useRouter();
+  const {setGlobalLoader}=useGlobalData()
 
   useEffect(()=>{
     getCollectionListPending()
@@ -18,11 +21,17 @@ const ListPendingCollectionContainer = () => {
 
  
   const getCollectionListPending= async()=>{
+    setGlobalLoader(true)
     const response= await collectionServiceObj.getCollectionListPending()
     if(response.ok){
       const responseData=response.data
       setInHandCollectionList(responseData)
     }
+    else{
+      const error=response.error
+      notify("error",error.error_message)
+    }
+    setGlobalLoader(false)
   }
 
   return (

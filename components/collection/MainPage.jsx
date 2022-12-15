@@ -7,6 +7,7 @@ import { collectionServiceObj } from '../../services/collectionService';
 import {priceBodyTemplate} from "../common/Helper"
 import { useRouter } from 'next/router';
 import { useGlobalData } from '../../contexts/GlobalContext';
+import { notify } from '../Notify';
 
 
 const MainPage = () => {
@@ -16,7 +17,7 @@ const MainPage = () => {
   const [SRNumber,setSRNumber]=useState("")
   const [loadingSRBtn,setLoadingSRBtn]=useState(false)
   const router = useRouter();
-  const {setSRDetails,setGlobalLoader,globalLoader}=useGlobalData()
+  const {setSRDetails,setGlobalLoader}=useGlobalData()
 
 
   useEffect(()=>{
@@ -31,6 +32,10 @@ const MainPage = () => {
       const responseData=response.data
       setSRDetails(responseData)
       router.push("/payment-collection")
+    }
+    else{
+      const error=response.error
+      notify("error",error.error_message)
     }
    
     setGlobalLoader(false)
@@ -48,6 +53,10 @@ const MainPage = () => {
         setExceedLimit(false)
       }
       setCollectionSummary(responseData)
+    }
+    else{
+      const error=response.error
+      notify("error",error.error_message)
     }
      setGlobalLoader(false) 
   };

@@ -1,7 +1,9 @@
 import { apiGetCall, apiPostCall, apiPutCall, apiPatchCall, apiDeleteCall } from '../config/apiConfig';
 import { GET_COLLECTION_SUMARY,
          GET_COLLECTION_LISTING,
-         GET_SR_DETAILS
+         GET_SR_DETAILS,
+         UPDATE_COLLECTION_STATUS,
+         DEPOSITE_REQUSET_DETAILS
     } from '../config/urlConfig'
 
 
@@ -39,7 +41,23 @@ class CollectionService {
         return response
     }
 
+    updateCollectionRequestPicked = async(requestId,payload,header)=>{
+        const url = `${UPDATE_COLLECTION_STATUS}${requestId}/`
+        const response = await this.apiPutCall(url,{payload},{},header)
+        return response
+    }
 
+    updateCollectionRequestDeposited= async(requestId,payload,header)=>{
+        const url = `${UPDATE_COLLECTION_STATUS}${requestId}/`
+        const response = await this.apiPutCall(url,{payload},{},header)
+        return response
+    }
+
+    depositeRequestDetails= async(requestId)=>{
+        const url = `${DEPOSITE_REQUSET_DETAILS}${requestId}/`
+        const response = await this.apiGetCall(url)
+        return response
+    }
 }
 
 export default CollectionService

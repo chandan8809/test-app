@@ -36,7 +36,7 @@ const LoginContainer = () => {
 
  
   const showError = () => {
-    toast.current.show({severity:'error', summary: 'Error Message', detail:'Message Content', life: 3000});
+    toast.current.show({severity:'error', summary: 'Error', detail:'Wrong Username Or Password', life: 3000});
   }
 
   console.log("loginRes",username)

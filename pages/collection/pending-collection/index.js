@@ -1,5 +1,5 @@
 import React from 'react'
-import PendingCollectionContainer from '../../../components/collection/PendingCollectionContainer'
+import PendingCollectionContainer from '../../../components/collection/ListPendingCollectionContainer'
 
 const PendingCollection = () => {
   return (

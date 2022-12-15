@@ -1,14 +1,9 @@
-
-import styles from '../styles/Home.module.css'
+import AllCollectionContainer from "../components/collection/MainPage";
 
 
 export default function Home() {
   return (
-    <div className={styles.container}>
-      
-        <h1 className="text-3xl font-bold underline">
-          
-        </h1>
-    </div>
+    <div>welcome to cash cheque</div>
+    //<AllCollectionContainer/>
   )
 }

@@ -1,11 +1,11 @@
 import React from 'react'
-import AllCollectionContainer from '../../components/collection/AllCollectionContainer'
+import MainPage from '../../components/collection/MainPage'
 
 
 const Collection = () => {
   return (
     <div>
-        <AllCollectionContainer/>
+        <MainPage/>
     </div>
   )
 }

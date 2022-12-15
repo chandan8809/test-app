@@ -4,10 +4,12 @@ import {priceBodyTemplate} from "../common/Helper"
 import { collectionServiceObj } from '../../services/collectionService';
 import moment from "moment"
 import { useRouter } from 'next/router';
+import { useGlobalData } from '../../contexts/GlobalContext';
 
 const ListInHandCollection = () => {
   const [inHandCollectionList,setInHandCollectionList]=useState([])
   const router = useRouter();
+  const {setDepositeRequestDetails}=useGlobalData()
 
   useEffect(()=>{
     getInHandCollectionList()
@@ -29,7 +31,7 @@ const ListInHandCollection = () => {
         source_name: "ASM Adalhatu Morabadi"
       },
       {
-        id: 1,
+        id: 2,
         source_id: 4,
         status: "Collection requested",
         requested_at: "2022-12-13T14:33:52Z",
@@ -41,7 +43,7 @@ const ListInHandCollection = () => {
         source_name: "ASM Adalhatu Morabadi"
       },
       {
-        id: 1,
+        id: 3,
         source_id: 4,
         status: "Collection requested",
         requested_at: "2022-12-13T14:33:52Z",
@@ -56,6 +58,35 @@ const ListInHandCollection = () => {
     setInHandCollectionList(response)
   }
 
+  const getDepositeRequestDetails = async(request_id)=>{
+     //const response = await collectionServiceObj.depositeRequestDetails(request_id)
+     const response= {
+      store_name: "ASM Adalhatu Morabadi",
+      store_id: 4,
+      request_id: 1,
+      instrument_mode_tag: "CSH",
+      instrument_id: null,
+      beneficiary_name: "Fleet Labs Technologies private limited",
+      collected_amount: 1000.0,
+      account_number: "635005500202",
+      ifsc: "ICIC0006350",
+      instrument_mode: "Cash",
+      request_date: "2022-12-13T14:33:52Z",
+      status_tag: "CBP",
+      status: "Collection in progress"
+     }
+     setDepositeRequestDetails(response)
+     gotoDepositePage()
+
+  }
+
+  const gotoDepositePage=()=>{
+    router.push("/deposite")
+  }
+  const gotoMainPage=()=>{
+    router.push("/collection")
+  }
+
   return (
       <div className=' px-4'>
          <div className='flex items-center pt-8 gap-2'>
@@ -64,16 +95,19 @@ const ListInHandCollection = () => {
               alt='Tez POS Logo' 
               width={26} 
               height={26} 
-              onClick={()=> router.push(`/collection`)}
+              onClick={gotoMainPage}
               />
-            <h1 className='text-[18px] font-semibold text-blue-700'>InHand Collection</h1>
+            <h1 className='text-[18px] font-semibold text-blue-700'>In Hand Collections</h1>
           </div>
           
           <div className='flex flex-col  justify-around pt-8 text-gray-700 '>
 
             {inHandCollectionList.map((item,index)=>(
 
-             <div key={index} className='flex-1 rounded-xl flex p-2 bg-gray-100 shadow-md justify-between mt-3'>
+             <div key={index} 
+               className='flex-1 rounded-xl flex p-2 bg-gray-100 shadow-md justify-between mt-3 active:bg-gray-200'
+               onClick={()=>getDepositeRequestDetails(item.id)}
+               >
                <div className='flex flex-col flex-[60%]'>
                   <p className='text-[18px] font-bold'>{priceBodyTemplate(item?.collected_amount)}</p>
                   <p className='text-[16px]  font-semibold  mt-0.5'>{item?.instrument_mode}</p>

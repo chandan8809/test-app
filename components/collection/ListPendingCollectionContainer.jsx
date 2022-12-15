@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 
 
 
-const PendingCollectionContainer = () => {
+const ListPendingCollectionContainer = () => {
   const [inHandCollectionList,setInHandCollectionList]=useState([])
   const router = useRouter();
 
@@ -77,7 +77,7 @@ const PendingCollectionContainer = () => {
 
             {inHandCollectionList.map((item,index)=>(
 
-             <div key={index} className='flex-1 rounded-xl flex p-2 bg-gray-100 shadow-md justify-between mt-3'>
+             <div key={index} className='flex-1 rounded-xl flex p-2 bg-gray-100 shadow-md justify-between mt-3 '>
                <div className='flex flex-col flex-[60%]'>
                   <p className='text-[18px] font-bold'>{priceBodyTemplate(item?.collected_amount)}</p>
                   <p className='text-[16px]  font-semibold  mt-0.5'>{item?.instrument_mode}</p>
@@ -93,4 +93,4 @@ const PendingCollectionContainer = () => {
     )
 }
 
-export default PendingCollectionContainer
+export default ListPendingCollectionContainer

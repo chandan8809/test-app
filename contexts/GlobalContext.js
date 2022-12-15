@@ -4,12 +4,15 @@ const GlobalContext = createContext(null);
 
 export const GlobalDataProvider = ({ children }) => {
   const [SRDetails, setSRDetails] = useState({});
+  const [depositRequestDetails,setDepositeRequestDetails]=useState({})
   
   return (
     <GlobalContext.Provider
       value={{
         SRDetails,
         setSRDetails,
+        depositRequestDetails,
+        setDepositeRequestDetails
       }}>
       {children}
     </GlobalContext.Provider>

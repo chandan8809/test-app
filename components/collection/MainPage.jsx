@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import { useGlobalData } from '../../contexts/GlobalContext';
 
 
-const AllCollectionContainer = () => {
+const MainPage = () => {
   const [showSRModal,setShowSRModal]=useState(false)
   const [collectionSummary,setCollectionSummary]=useState({})
   const [exceedLimit,setExceedLimit]=useState(false)
@@ -39,7 +39,7 @@ const AllCollectionContainer = () => {
     }
 
     setSRDetails(response)
-    router.push("/pending-request")
+    router.push("/payment-collection")
     
   }
 
@@ -56,7 +56,7 @@ const AllCollectionContainer = () => {
           amount: 10000,
           n_stores:4
       },
-      limit: 10000
+      limit: 100
     }
 
     if(response?.cash?.amount > response?.limit){
@@ -107,7 +107,7 @@ const AllCollectionContainer = () => {
 
         <div className='flex flex-col gap-2 justify-around pt-14 text-gray-700 '>
           <div 
-            className='flex-1 rounded-xl flex justify-between  bg-gray-100 gap-4 p-4'
+            className='flex-1 rounded-xl flex justify-between  bg-gray-100 gap-4 p-4 active:bg-gray-200'
             onClick={goToListInHandPage}
             >
             <p className='text-[18px] font-semibold'>In Hand Collections</p>
@@ -116,7 +116,7 @@ const AllCollectionContainer = () => {
 
           </div>
           <div 
-            className='flex-1 rounded-xl flex justify-between bg-gray-100 gap-4 p-4'
+            className='flex-1 rounded-xl flex justify-between bg-gray-100 gap-4 p-4 active:bg-gray-200'
             onClick={goToListPendingCollection}
             >
             <p className='text-[18px] font-semibold'>Pending Requests</p>
@@ -134,16 +134,18 @@ const AllCollectionContainer = () => {
           onHide={() => setShowSRModal(false)} 
           breakpoints={{'960px': '75vw'}} 
           style={{width: '90vw'}}
+          //position={'top'}
           >
-          <div className='pt-4'>
+          <div className='pt-2'>
             <InputText 
               style={{width:"75vw"}}
               value={SRNumber}
               onChange={(e)=>setSRNumber(e.target.value)}
               />
           </div>
-          <div className='mx-auto text-center mt-8'>
+          <div className='mx-auto text-center mt-6'>
             <Button 
+             disabled={SRNumber==""}
              label="Submit" 
              icon="pi pi-check" 
              loading={loadingSRBtn}
@@ -159,4 +161,4 @@ const AllCollectionContainer = () => {
   )
 }
 
-export default AllCollectionContainer
+export default MainPage

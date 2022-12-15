@@ -11,18 +11,16 @@ const videoConstraints = {
 
 const Camera = () => {
   const webcamRef = useRef(null);
-  //const [url, setUrl] = React.useState(null);
   const { moneyDepositeUrl,setMoneyDepositeUrl}=useGlobalData()
 
   const capturePhoto = React.useCallback(async () => {
     const imageSrc = webcamRef.current.getScreenshot();
-    //setUrl(imageSrc);
     setMoneyDepositeUrl(imageSrc)
     
   }, [webcamRef]);
 
   const onUserMedia = (e) => {
-    console.log(e);
+    //console.log(e);
   };
 
   return (
@@ -43,8 +41,6 @@ const Camera = () => {
            />
       </div>}
 
-      {/* <button onClick={capturePhoto}>Capture</button>
-      <button onClick={() => setUrl(null)}>Refresh</button> */}
 
       {moneyDepositeUrl && (
         <div className="pt-2">

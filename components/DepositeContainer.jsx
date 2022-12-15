@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { Button } from 'primereact/button'
 import { InputNumber } from 'primereact/inputnumber'
-import React, { useState } from 'react'
+import React, { useRef, useState, ChangeEvent } from 'react'
 import moment from "moment"
 import { useRouter } from 'next/router';
 import { collectionServiceObj } from '../services/collectionService'
@@ -9,56 +9,39 @@ import { priceBodyTemplate } from './common/Helper'
 import Camera from './camera'
 import { Dialog } from 'primereact/dialog'
 import { useGlobalData } from '../contexts/GlobalContext'
+import { InputText } from 'primereact/inputtext'
 
 const DepositeContainer = () => {
   const [showSRModal,setShowSRModal]=useState(false)
   const [referenceNo,setReferenceNo]=useState(null)
-  const {moneyDepositeUrl,setMoneyDepositeUrl}=useGlobalData()
+  const [file, setFile] = useState()
+  const {moneyDepositeUrl,setMoneyDepositeUrl,depositeRequestDetails}=useGlobalData()
 
-  console.log("delo",moneyDepositeUrl)
 
   const router=useRouter()
-  //const {depositeRequestDetails}=useGlobalData()
-  const depositeRequestDetails= {
-    store_name: "ASM Adalhatu Morabadi",
-    store_id: 4,
-    request_id: 1,
-    instrument_mode_tag: "CHQ",
-    instrument_id: null,
-    beneficiary_name: "Fleet Labs Technologies private limited",
-    collected_amount: 1000.0,
-    account_number: "635005500202",
-    ifsc: "ICIC0006350",
-    instrument_mode: "Cash",
-    request_date: "2022-12-13T14:33:52Z",
-    status_tag: "CBP",
-    status: "Collection in progress"
-   }
+  
+
 
  
-  //const {SRDetails}=useGlobalData()
-  const SRDetails={
-    store_name: "ASM Adalhatu Morabadi",
-    store_id: 4,
-    request_id: 1,
-    instrument_mode_tag: "CSH",
-    instrument_mode: "Cash",
-    request_date: "2022-12-13T14:33:52Z",
-    status_tag: "CRQ",
-    status: "Collection requested"
-  }
+
 
 
   const updateCollectionRequestDeposited = async() =>{
     const formData = new FormData();
     formData.append("status", "CDP");
-    formData.append("file", moneyDepositeUrl);
+    formData.append("file", file);
     formData.append("ref_no",referenceNo)
 
-    const response= await collectionServiceObj.updateCollectionRequestDeposited(SRDetails?.request_id, formData, {"Content-Type" : "multipart/form-data"})
+    const response= await collectionServiceObj.updateCollectionRequestDeposited(depositeRequestDetails?.request_id, formData, {"Content-Type" : "multipart/form-data"})
+    
+  }
+
+  function handleFileChange(event) {
+    setFile(event.target.files[0])
   }
 
   return (
+   
     <div className=' px-4'>
     <div className='flex items-center pt-8 gap-2'>
       <Image 
@@ -101,9 +84,8 @@ const DepositeContainer = () => {
        
       {depositeRequestDetails.instrument_mode_tag=="CHQ" && <div className='flex flex-col p-2'>
         <p className='text-sm'>Cheque Number</p>
-        {/* <p className='text-[16px]'>{depositeRequestDetails?.cheque_number}</p> */}
-        <p className='text-[16px]'>Dummy</p>
-      </div> }
+        <p className='text-[16px]'>{depositeRequestDetails?.instrument_id}</p>
+      </div>}
       
       <div className='flex flex-col p-2'>
         <p className='text-sm'>Beneficiary Name</p>
@@ -112,48 +94,21 @@ const DepositeContainer = () => {
 
       <div className='flex flex-col p-2'>
         <p className='text-sm'>Reference Number</p>
-        <InputNumber 
-            value={referenceNo} 
-            onChange={(e) => setReferenceNo(e.value)}   
-            useGrouping={false}
-            />
+        <InputText value={referenceNo} onChange={(e) => setReferenceNo(e.target.value)} />
       </div>
 
-      <div className='flex flex-col p-2'>
-        <p className='text-sm'>Deposite Slip Image</p>
-        <div 
-          className='flex items-center gap-2'
-          
-          >
-          <Image 
-            src='/openCamera.svg' 
-            alt='Tez POS Logo' 
-            width={34} 
-            height={34}
-            
-            />
-            
-          <h1 
-            onClick={() => setShowSRModal(true)} 
-            className='text-sm text-blue-700'>{moneyDepositeUrl ? "Dummy Image name" : "Upload File or Open Camera"}
-          </h1>
-
-          {moneyDepositeUrl && <Button 
-            onClick={() => {
-              setMoneyDepositeUrl(null)
-              }} 
-            icon="pi pi-times" 
-            className="p-button-rounded p-button-danger p-button-text" 
-            aria-label="Cancel"
-          />}
-            
-        </div>
+      <div className="form-group flex flex-col p-2">
+          <label htmlFor="invoiceNumber" className='text-m text-gray'  >
+            Image upload
+          </label>
+          <input id="fileInput" type="file" ref={inputRef}
+          onChange={handleFileChange}/>
       </div>
      
     </div>
     <div className='text-center  bottom-0 left-0 right-0 mx-auto'>
       <Button 
-        disabled={!referenceNo || !moneyDepositeUrl}
+        disabled={!referenceNo}
         label='Deposite' 
         className='p-button-info'
         onClick={updateCollectionRequestDeposited}
@@ -180,7 +135,6 @@ const DepositeContainer = () => {
          </div>
          
         </Dialog>
-        {/* <Button className='p-button-info' label='Enter SR Number'/> */}
       </div>
 </div>
     

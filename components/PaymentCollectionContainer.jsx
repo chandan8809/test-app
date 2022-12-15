@@ -31,19 +31,6 @@ const PaymentCollectionContainer = () => {
   const showError = () => {
     toast.current.show({severity:'error', summary: 'Error', detail:'Wrong Username Or Password', life: 3000});
   }
-  //const {SRDetails}=useGlobalData()
-  // const SRDetails={
-  //   store_name: "ASM Adalhatu Morabadi",
-  //   store_id: 4,
-  //   request_id: 1,
-  //   instrument_mode_tag: "CHQ",
-  //   instrument_mode: "Cash",
-  //   request_date: "2022-12-13T14:33:52Z",
-  //   status_tag: "CRQ",
-  //   status: "Collection requested",
-  //   beneficiary_name:"The fleet labs tech",
-  //   cheque_number:"3246274876"
-  // }
 
   const resendOTPcall=async()=>{
     const response = await collectionServiceObj.resendOTP(SRDetails?.request_id)
@@ -58,7 +45,7 @@ const PaymentCollectionContainer = () => {
       formData.append("instrument_id",SRDetails?.instrument_id );
       formData.append("file", moneyDepositeUrl);
     }
-    console.log(formData);
+    
     const response= await collectionServiceObj.updateCollectionRequestPicked(SRDetails?.request_id, formData, {"Content-Type" : "multipart/form-data"})
     if(response.ok){
       const responseData=response.data
@@ -199,7 +186,6 @@ const PaymentCollectionContainer = () => {
          </div>
          
         </Dialog>
-        {/* <Button className='p-button-info' label='Enter SR Number'/> */}
       </div>
 
     </div>

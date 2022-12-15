@@ -17,44 +17,7 @@ const ListInHandCollection = () => {
 
   const getInHandCollectionList= async()=>{
     const response= await collectionServiceObj.getCollectionListingInHand()
-    // const response=[
-    //   {
-    //     id: 1,
-    //     source_id: 4,
-    //     status: "Collection requested",
-    //     requested_at: "2022-12-13T14:33:52Z",
-    //     completed_at: null,
-    //     instrument_mode: "Cash",
-    //     collected_amount: 100.0,
-    //     status_tag: "CRQ",
-    //     instrument_mode_tag: "CSH",
-    //     source_name: "ASM Adalhatu Morabadi"
-    //   },
-    //   {
-    //     id: 2,
-    //     source_id: 4,
-    //     status: "Collection requested",
-    //     requested_at: "2022-12-13T14:33:52Z",
-    //     completed_at: null,
-    //     instrument_mode: "Cash",
-    //     collected_amount: 2000.0,
-    //     status_tag: "CRQ",
-    //     instrument_mode_tag: "CSH",
-    //     source_name: "ASM Adalhatu Morabadi"
-    //   },
-    //   {
-    //     id: 3,
-    //     source_id: 4,
-    //     status: "Collection requested",
-    //     requested_at: "2022-12-13T14:33:52Z",
-    //     completed_at: "2022-12-13T14:33:52Z",
-    //     instrument_mode: "Cheque",
-    //     collected_amount: 30000.0,
-    //     status_tag: "CRQ",
-    //     instrument_mode_tag: "CSH",
-    //     source_name: "ASM Adalhatu Morabadi ASM Adalhatu Morabadi"
-    //   }
-    // ]
+   
     if(response.ok){
       const responseData=response.data
       setInHandCollectionList(responseData)
@@ -63,25 +26,13 @@ const ListInHandCollection = () => {
   }
 
   const getDepositeRequestDetails = async(request_id)=>{
-     //const response = await collectionServiceObj.depositeRequestDetails(request_id)
-     const response= {
-      store_name: "ASM Adalhatu Morabadi",
-      store_id: 4,
-      request_id: 1,
-      instrument_mode_tag: "CSH",
-      instrument_id: null,
-      beneficiary_name: "Fleet Labs Technologies private limited",
-      collected_amount: 1000.0,
-      account_number: "635005500202",
-      ifsc: "ICIC0006350",
-      instrument_mode: "Cash",
-      request_date: "2022-12-13T14:33:52Z",
-      status_tag: "CBP",
-      status: "Collection in progress"
-     }
-     setDepositeRequestDetails(response)
-     gotoDepositePage()
+     const response = await collectionServiceObj.depositeRequestDetails(request_id)
 
+    if(response.ok){
+      const responseData=response.data
+      setDepositeRequestDetails(responseData)
+      gotoDepositePage()
+    }
   }
 
   const gotoDepositePage=()=>{

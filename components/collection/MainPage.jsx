@@ -26,21 +26,9 @@ const MainPage = () => {
   const getSRDetails = async()=>{
     setGlobalLoader(true)
     const response = await collectionServiceObj.getSRDetails(SRNumber)
-    
-    // const response= {
-    //   store_name: "ASM73374 Adalhatu Morabadi",
-    //   store_id: 4,
-    //   request_id: 1,
-    //   instrument_mode_tag: "CSH",
-    //   instrument_mode: "Cash",
-    //   request_date: "2022-12-13T14:33:52Z",
-    //   status_tag: "CRQ",
-    //   status: "Collection requested"
-    // }
-   
+  
     if(response.ok){
       const responseData=response.data
-      console.log("yt",responseData)
       setSRDetails(responseData)
       router.push("/payment-collection")
     }
@@ -52,19 +40,6 @@ const MainPage = () => {
   const getAllCollection = async () => {
     setGlobalLoader(true)
     let response = await collectionServiceObj.getCollectionSummary()
-    // const response = {
-    //   cash: {
-    //       count: 4,
-    //       amount: 10000,
-    //       n_stores:3
-    //    },
-    //   cheque: {
-    //       count: 4,
-    //       amount: 10000,
-    //       n_stores:4
-    //   },
-    //   limit: 100
-    // }
     if(response.ok){
       const responseData=response.data
       if(responseData?.cash?.amount > responseData?.limit){
@@ -74,9 +49,7 @@ const MainPage = () => {
       }
       setCollectionSummary(responseData)
     }
-     setGlobalLoader(false)
-
-    
+     setGlobalLoader(false) 
   };
 
   
@@ -166,7 +139,6 @@ const MainPage = () => {
              />
          </div>
         </Dialog>
-        {/* <Button className='p-button-info' label='Enter SR Number'/> */}
         </div>
     </div>
     

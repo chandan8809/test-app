@@ -4,18 +4,18 @@ const GlobalContext = createContext(null);
 
 export const GlobalDataProvider = ({ children }) => {
   const [SRDetails, setSRDetails] = useState({});
-  const [depositRequestDetails,setDepositeRequestDetails]=useState({})
+  const [depositeRequestDetails,setDepositeRequestDetails]=useState({})
   const [moneyDepositeUrl,setMoneyDepositeUrl]=useState(null)
   const [globalLoader,setGlobalLoader]=useState(false)
   
 
-  console.log("ads",SRDetails)
+
   return (
     <GlobalContext.Provider
       value={{
         SRDetails,
         setSRDetails,
-        depositRequestDetails,
+        depositeRequestDetails,
         setDepositeRequestDetails,
         moneyDepositeUrl,
         setMoneyDepositeUrl,

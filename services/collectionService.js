@@ -36,6 +36,12 @@ class CollectionService {
         return response
     }
 
+    getDepositedList = async()=>{
+        const url=GET_COLLECTION_LISTING
+        const response = await this.apiGetCall(url,{source: "store",status:"deposited"})
+        return response
+    }
+
     getSRDetails = async(SRNumber)=>{
         const url = GET_SR_DETAILS
         const response = await this.apiGetCall(url,{sr_number:SRNumber})

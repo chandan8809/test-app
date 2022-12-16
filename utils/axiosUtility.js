@@ -1,5 +1,5 @@
 import axios from "axios"
-
+import { logout } from '../contexts/UserContext';
 //Utility to initialize axios
 export const initializeAxios = () => {
     interceptResponse();

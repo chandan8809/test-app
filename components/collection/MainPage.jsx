@@ -72,11 +72,35 @@ const MainPage = () => {
 
 
   const goToListInHandPage=()=>{
-    router.push(`/collection/in-hand-collection`)
+    router.push({
+      pathname: `/collection/in-hand-collection`,
+    });
   }
 
   const goToListPendingCollection=()=>{
-    router.push(`/collection/pending-collection`)
+    router.push({
+      pathname: `/collection/pending-collection`,
+    });
+  }
+
+  const goToListDeposited=()=>{
+    router.push({
+      pathname: `/collection/list-deposited`,
+    });
+  }
+
+  const goToListInHandPageCash=()=>{
+    router.push({
+      pathname: `/collection/in-hand-collection`,
+      query:{request:"Cash"}
+    });
+  }
+
+  const goToListInHandPageCheque=()=>{
+    router.push({
+      pathname: `/collection/in-hand-collection`,
+      query:{request:"Cheque"}
+    });
   }
  
 
@@ -85,13 +109,19 @@ const MainPage = () => {
         
         <h1 className='text-xl font-semibold pt-10 text-blue-700'>All Collection</h1>
         <div className='flex gap-2 justify-around pt-10 text-gray-700 '>
-          <div className={`flex-1 rounded-xl flex flex-col p-2 bg-green-100 shadow-md ${exceedLimit && "border-red-500 border"}`}>
+          <div 
+            className={`flex-1 cursor-pointer rounded-xl flex flex-col p-2 bg-green-100 shadow-md ${exceedLimit && "border-red-500 border"}`}
+            onClick={goToListInHandPageCash}
+            >
             <p className='text-[18px] font-light text-gray-500'>Cash in Hand</p>
             <p className='text-xl font-bold mt-1'>{priceBodyTemplate(collectionSummary?.cash?.amount)}</p>
             <p className='text-gray-500 mt-0.5 text-sm'>({collectionSummary?.cash?.n_stores} Stores)</p>
 
           </div>
-          <div className={`flex-1 rounded-xl flex flex-col p-2 bg-blue-100 shadow-md`}>
+          <div 
+            className={`flex-1 cursor-pointer rounded-xl flex flex-col p-2 bg-blue-100 shadow-md`}
+            onClick={goToListInHandPageCheque}
+            >
             <p className='text-[18px] font-light text-gray-500'>Cheques in Hand</p>
             <p className='text-xl font-bold mt-1'>{collectionSummary?.cheque?.count}</p>
             <p className='text-gray-500 mt-0.5 text-sm'>({collectionSummary?.cheque?.n_stores} Stores)</p>
@@ -124,13 +154,21 @@ const MainPage = () => {
           
 
           </div>
+
+          <div 
+            className='flex-1 rounded-xl flex justify-between bg-gray-100 gap-4 p-4 active:bg-gray-200 cursor-pointer'
+            onClick={goToListDeposited}
+            >
+            <p className='text-[18px] font-semibold'>Deposited</p>
+            <Image src='/ArrowSign.svg' alt='Tez POS Logo' width={12} height={22} />
+          </div>
         </div>
 
-        <div className='absolute top-1'>
+        <div className='absolute top-7'>
          <Button 
           onClick={()=>setLogoutDialog(true)} 
           label='Logout' 
-          className='p-button-small p-button-danger p-button-rounded p-button-text'
+          className='p-button-small p-button-danger p-button-rounded p-button-text '
           />
         </div>
        

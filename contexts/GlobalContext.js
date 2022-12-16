@@ -15,7 +15,8 @@ export const GlobalDataProvider = ({ children }) => {
       value={{
         SRDetails,
         setSRDetails,
-        depositeRequestDataAvailable,setDepositeRequestDataAvailable,
+        depositeRequestDataAvailable,
+        setDepositeRequestDataAvailable,
         moneyDepositeUrl,
         setMoneyDepositeUrl,
         globalLoader,

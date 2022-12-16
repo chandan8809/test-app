@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { setCommonAuthorizationToken } from '../utils/axiosUtility';
 import { authServiceObj } from '../services/authServices';
 
+
 const AuthContext = createContext(null);
 
 const localStorageKey = 'user';

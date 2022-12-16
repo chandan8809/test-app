@@ -11,7 +11,7 @@ export default function Layout({ children }) {
 
 if (router.pathname.includes('/login')) {
     return (
-        <>
+        <div className='max-w-screen-md mx-auto'>
           <Header/>
           <main>
             <div>{children}</div>
@@ -21,11 +21,11 @@ if (router.pathname.includes('/login')) {
                 <ProgressSpinner  style={{width: '75px', height: '75px'}} strokeWidth="6"></ProgressSpinner>
             </div>
             )} 
-        </>
+        </div>
       );
 }
 return (
-  <>
+  <div className='max-w-screen-md mx-auto'>
     <main>
       <div>{children}</div>
     </main>
@@ -34,7 +34,7 @@ return (
           <ProgressSpinner  style={{width: '75px', height: '75px'}} strokeWidth="6"></ProgressSpinner>
       </div>
       )} 
-  </>
+  </div>
 );
 
 }

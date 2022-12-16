@@ -86,6 +86,8 @@ const PaymentCollectionContainer = ({SRNumber}) => {
     if(response.ok){
       const responseData=response.data
       setSRDetails((prev)=>({...prev,status_tag:responseData.status_tag}))
+      setStartTimer(true)
+      setCounter(30)
     }
     else{
       const error=response.error
@@ -96,8 +98,7 @@ const PaymentCollectionContainer = ({SRNumber}) => {
 
   const onDepositeButtonClick=()=>{
     if(SRDetails?.status_tag === "CRQ"){
-      setStartTimer(true)
-      setCounter(30)
+     
       updateCollectionRequestUpdate()
     }
     else if(SRDetails?.status_tag === "CBP"){
@@ -159,7 +160,7 @@ const PaymentCollectionContainer = ({SRNumber}) => {
       
       <div className='flex flex-col p-2'>
         <p className='text-sm'>Request Date</p>
-        <p className='text-[16px]'>{moment(SRDetails?.request_date).utc().format('YYYY-MM-DD')}</p>
+        <p className='text-[16px]'>{moment(SRDetails?.request_date).utc().format('Do MMM, YYYY')}</p>
       </div>
       <div className='flex flex-col p-2'>
         <p className='text-[16px] text-gray-900 mb-2'>{SRDetails?.instrument_mode_tag ==="CSH" ?"Cash Pickup Amount":"Cheque Amount"}</p>
@@ -172,13 +173,18 @@ const PaymentCollectionContainer = ({SRNumber}) => {
             locale="en-IN" 
             maxFractionDigits={2}
             className="p-inputtext-lg block"
+            
+            onKeyDown={(e) => {
+              (e.code === 'Enter' || e.code === 'NumpadEnter') && onDepositeButtonClick()
+              // getStocks(e.target.value)
+            }}
             />
       </div>
 
      {SRDetails?.instrument_mode_tag ==="CHQ" && 
       <div className="form-group flex flex-col p-2">
           <label htmlFor="invoiceNumber" className='text-m text-gray'  >
-            Image upload
+            Cheque Image Upload
           </label>
           <input id="fileInput" type="file" ref={inputRef}
           onChange={handleFileChange}/>
@@ -241,13 +247,15 @@ const PaymentCollectionContainer = ({SRNumber}) => {
     </div>
 
     <div className='text-center absolute bottom-8 left-0 right-0 mx-auto'>
-      {counter !==0 && <p className='pb-4 text-red-600'>Retry sending OTP in {counter}</p>}
+      {counter !==0 && <p className='pb-4 text-blue-600'>Please Share OTP (Retry sending OTP {counter})</p>}
       <Button 
         disabled={SRDetails?.instrument_mode_tag ==="CHQ" ?startTimer || collectedAmount==null || !file : startTimer || collectedAmount==null}
         label='Pickup and Get OTP' 
         className='p-button-info'
         onClick={onDepositeButtonClick}
         />
+       
+
     </div>
     
 </div>

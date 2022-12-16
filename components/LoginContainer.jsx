@@ -19,8 +19,6 @@ const LoginContainer = () => {
   const handleSubmit=async()=>{
     setLoadingBtn(true)
     const loginResponse = await login(username,password);
-
-    setLoadingBtn(false)
     
     const { success, error } = loginResponse ?? {};
     if (error) {
@@ -28,11 +26,10 @@ const LoginContainer = () => {
       setErrorLogin(true)
     
     } else if (success) {
-     
       setErrorLogin(false)
       router.push(`/collection`)
-      
     }
+    setLoadingBtn(false)
   }
   
  
@@ -59,7 +56,12 @@ const LoginContainer = () => {
             onChange={(e) => setPassword(e.target.value)} 
             feedback={false} 
             toggleMask
-            className={errorLogin && "p-invalid block"} />
+            className={errorLogin && "p-invalid block"} 
+            onKeyDown={(e) => {
+              (e.code === 'Enter' || e.code === 'NumpadEnter') && handleSubmit()
+              // getStocks(e.target.value)
+            }}
+            />
           <label htmlFor="username">Password</label>
         </span>
  

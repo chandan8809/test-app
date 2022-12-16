@@ -1,8 +1,7 @@
 import Image from 'next/image'
 import { Button } from 'primereact/button'
 import { InputNumber } from 'primereact/inputnumber'
-import React, { useRef, useState, ChangeEvent } from 'react'
-import moment from "moment"
+import React, { useRef, useState, useEffect } from 'react'
 import { useRouter } from 'next/router';
 import { collectionServiceObj } from '../services/collectionService'
 import { priceBodyTemplate } from './common/Helper'
@@ -12,14 +11,19 @@ import { useGlobalData } from '../contexts/GlobalContext'
 import { InputText } from 'primereact/inputtext'
 import { notify } from './Notify';
 
-const DepositeContainer = () => {
+const DepositeContainer = ({requestId}) => {
   const [showSRModal,setShowSRModal]=useState(false)
   const [referenceNo,setReferenceNo]=useState(null)
   const [file, setFile] = useState()
-  const {moneyDepositeUrl,setMoneyDepositeUrl,depositeRequestDetails,setGlobalLoader}=useGlobalData()
+  const [depositeRequestDetails,setDepositeRequestDetails]=useState()
+  const {moneyDepositeUrl,setMoneyDepositeUrl,setGlobalLoader,depositeRequestDataAvailable}=useGlobalData()
   const inputRef=useRef()
 
   const router=useRouter()
+
+  useEffect(()=>{
+    getDepositeRequestDetails(requestId)
+  },[])
 
   const updateCollectionRequestDeposited = async() =>{
     setGlobalLoader(true)
@@ -39,8 +43,25 @@ const DepositeContainer = () => {
       notify("error",error.error_message)
     }
     setGlobalLoader(false)
-    
   }
+
+
+  const getDepositeRequestDetails = async(request_id)=>{
+    
+     const response = await collectionServiceObj.depositeRequestDetails(request_id)
+
+    if(response.ok){
+      const responseData=response.data
+      setDepositeRequestDetails(responseData)
+     
+    }
+    else{
+      const error=response.error
+      notify("error",error.error_message)
+    }
+  
+  }
+
 
   function handleFileChange(event) {
     setFile(event.target.files[0])
@@ -57,7 +78,7 @@ const DepositeContainer = () => {
         height={26} 
         onClick={()=> router.push(`/collection/in-hand-collection`)}
         />
-      <h1 className='text-[18px] font-semibold text-blue-700'>Deposite</h1>
+      <h1 className='text-[18px] font-semibold text-blue-700'>Deposit</h1>
     </div>
 
     <div className='flex flex-col  justify-around pt-8 text-gray-900 gap-2 '>
@@ -83,12 +104,12 @@ const DepositeContainer = () => {
         <p className='text-sm'>Account Number</p>
         <p className='text-[16px]'>{depositeRequestDetails?.account_number}</p>
       </div>
-      {depositeRequestDetails.instrument_mode_tag=="CSH" && <div className='flex flex-col p-2'>
+      {depositeRequestDetails?.instrument_mode_tag=="CSH" && <div className='flex flex-col p-2'>
         <p className='text-sm'>IFSC Code</p>
         <p className='text-[16px]'>{depositeRequestDetails?.ifsc}</p>
       </div> }
        
-      {depositeRequestDetails.instrument_mode_tag=="CHQ" && <div className='flex flex-col p-2'>
+      {depositeRequestDetails?.instrument_mode_tag=="CHQ" && <div className='flex flex-col p-2'>
         <p className='text-sm'>Cheque Number</p>
         <p className='text-[16px]'>{depositeRequestDetails?.instrument_id}</p>
       </div>}
@@ -105,7 +126,7 @@ const DepositeContainer = () => {
 
       <div className="form-group flex flex-col p-2">
           <label htmlFor="invoiceNumber" className='text-m text-gray'  >
-            Image upload
+            Deposit Image Upload 
           </label>
           <input id="fileInput" type="file" ref={inputRef}
           onChange={handleFileChange}/>
@@ -115,7 +136,7 @@ const DepositeContainer = () => {
     <div className='text-center  bottom-0 left-0 right-0 mx-auto'>
       <Button 
         disabled={!referenceNo}
-        label='Deposite' 
+        label='Deposit' 
         className='p-button-info'
         onClick={updateCollectionRequestDeposited}
         />

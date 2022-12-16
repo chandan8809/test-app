@@ -7,13 +7,19 @@ import { Button } from 'primereact/button';
 import { useRouter } from 'next/router';
 import { useGlobalData } from '../../contexts/GlobalContext';
 import { notify } from '../Notify';
+import { Dialog } from 'primereact/dialog';
+import { InputText } from 'primereact/inputtext';
 
 
 
 const ListPendingCollectionContainer = () => {
   const [inHandCollectionList,setInHandCollectionList]=useState([])
   const router = useRouter();
-  const {setGlobalLoader}=useGlobalData()
+
+  const [showSRModal,setShowSRModal]=useState(false)
+  const [SRNumber,setSRNumber]=useState("")
+  const [loadingSRBtn,setLoadingSRBtn]=useState(false)
+  const {setSRDetails,setGlobalLoader}=useGlobalData()
 
   useEffect(()=>{
     getCollectionListPending()
@@ -34,6 +40,22 @@ const ListPendingCollectionContainer = () => {
     setGlobalLoader(false)
   }
 
+  const getSRDetails = async()=>{
+    setLoadingSRBtn(true)
+    const response = await collectionServiceObj.getSRDetails(SRNumber)
+  
+    if(response.ok){
+      const responseData=response.data
+      setSRDetails(responseData)
+      gotoCollectionPage()
+    }
+    else{
+      const error=response.error
+      notify("error",error.error_message)
+    }
+    setLoadingSRBtn(false)
+  }
+
   return (
       <div className=' px-4'>
           <div className='flex items-center pt-8 gap-2'>
@@ -51,18 +73,48 @@ const ListPendingCollectionContainer = () => {
 
             {inHandCollectionList.map((item,index)=>(
 
-             <div key={index} className='flex-1 rounded-xl flex p-2 bg-gray-100 shadow-md justify-between mt-3 '>
+             <div key={index} 
+               onClick={()=>setShowSRModal(true)}
+               className='flex-1 rounded-xl flex p-2 bg-gray-100 shadow-md justify-between mt-3 cursor-pointer'>
                <div className='flex flex-col flex-[60%]'>
-                  <p className='text-[18px] font-bold'>{priceBodyTemplate(item?.collected_amount)}</p>
                   <p className='text-[16px]  font-semibold  mt-0.5'>{item?.instrument_mode}</p>
                   <p className=' mt-0.5 text-xs'>store : {item?.source_name}</p>
-                  {item.completed_at!==null && <p className=' mt-0.5 text-xs'>Pickup Date : {moment(item.completed_at).utc().format('YYYY-MM-DD')}</p>}
+                  <p className=' mt-0.5 text-xs'>Pickup Date : {moment(item.requested_at).utc().format('Do MMM, YYYY')}</p>
                </div>
              </div>
 
             ))}
            
           </div>
+          <Dialog 
+            header="Enter Pickup OTP" 
+            visible={showSRModal} 
+            onHide={() => setShowSRModal(false)} 
+            breakpoints={{'960px': '75vw'}} 
+            style={{width: '90vw'}}
+            //position={'top'}
+            >
+            <div className='pt-2'>
+              <InputText 
+                style={{width:"300px"}}
+                value={SRNumber}
+                onChange={(e)=>setSRNumber(e.target.value)}
+                onKeyDown={(e) => {
+                  (e.code === 'Enter' || e.code === 'NumpadEnter') && getSRDetails()
+                }}
+                />
+            </div>
+            <div className='mx-auto text-center mt-6'>
+              <Button 
+              disabled={SRNumber==""}
+              label="Submit" 
+              icon="pi pi-check" 
+              loading={loadingSRBtn}
+              className='p-button-info'
+              onClick={getSRDetails}
+              />
+          </div>
+          </Dialog>
       </div>
     )
 }

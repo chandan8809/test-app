@@ -8,7 +8,7 @@ import {priceBodyTemplate} from "../common/Helper"
 import { useRouter } from 'next/router';
 import { useGlobalData } from '../../contexts/GlobalContext';
 import { notify } from '../Notify';
-
+import {useAuth} from "../../contexts/UserContext"
 
 const MainPage = () => {
   const [showSRModal,setShowSRModal]=useState(false)
@@ -18,6 +18,8 @@ const MainPage = () => {
   const [loadingSRBtn,setLoadingSRBtn]=useState(false)
   const router = useRouter();
   const {setSRDetails,setGlobalLoader}=useGlobalData()
+  const {logout}=useAuth()
+  const [logoutDialog,setLogoutDialog]=useState(false)
 
 
   useEffect(()=>{
@@ -25,7 +27,7 @@ const MainPage = () => {
   },[])
 
   const getSRDetails = async()=>{
-    setGlobalLoader(true)
+    setLoadingSRBtn(true)
     const response = await collectionServiceObj.getSRDetails(SRNumber)
   
     if(response.ok){
@@ -37,7 +39,7 @@ const MainPage = () => {
       const error=response.error
       notify("error",error.error_message)
     }
-    setGlobalLoader(false)
+    setLoadingSRBtn(false)
   }
 
   const gotoCollectionPage=()=>{
@@ -62,14 +64,12 @@ const MainPage = () => {
     else{
       const error=response.error
       notify("error",error.error_message)
+     
     }
      setGlobalLoader(false) 
   };
 
-  
 
-
-  
 
   const goToListInHandPage=()=>{
     router.push(`/collection/in-hand-collection`)
@@ -81,7 +81,8 @@ const MainPage = () => {
  
 
   return (
-    <div className='text-center px-4 '>
+    <div className='text-center px-4'>
+        
         <h1 className='text-xl font-semibold pt-10 text-blue-700'>All Collection</h1>
         <div className='flex gap-2 justify-around pt-10 text-gray-700 '>
           <div className={`flex-1 rounded-xl flex flex-col p-2 bg-green-100 shadow-md ${exceedLimit && "border-red-500 border"}`}>
@@ -106,7 +107,7 @@ const MainPage = () => {
 
         <div className='flex flex-col gap-2 justify-around pt-14 text-gray-700 '>
           <div 
-            className='flex-1 rounded-xl flex justify-between  bg-gray-100 gap-4 p-4 active:bg-gray-200'
+            className='flex-1 rounded-xl flex justify-between  bg-gray-100 gap-4 p-4 active:bg-gray-200 cursor-pointer'
             onClick={goToListInHandPage}
             >
             <p className='text-[18px] font-semibold'>In Hand Collections</p>
@@ -115,7 +116,7 @@ const MainPage = () => {
 
           </div>
           <div 
-            className='flex-1 rounded-xl flex justify-between bg-gray-100 gap-4 p-4 active:bg-gray-200'
+            className='flex-1 rounded-xl flex justify-between bg-gray-100 gap-4 p-4 active:bg-gray-200 cursor-pointer'
             onClick={goToListPendingCollection}
             >
             <p className='text-[18px] font-semibold'>Pending Requests</p>
@@ -125,34 +126,67 @@ const MainPage = () => {
           </div>
         </div>
 
+        <div className='absolute top-1'>
+         <Button 
+          onClick={()=>setLogoutDialog(true)} 
+          label='Logout' 
+          className='p-button-small p-button-danger p-button-rounded p-button-text'
+          />
+        </div>
+       
         <div className='bottom-8 absolute left-0 right-0 mx-auto'>
-        <Button label='Enter SR Number' className='p-button-info' icon="pi pi-external-link" onClick={() => setShowSRModal(true)} />
+        <Button label='Enter Pickup OTP' className='p-button-info' icon="pi pi-external-link" onClick={() => setShowSRModal(true)} />
         <Dialog 
-          header="Enter SR Number" 
+          header="Enter Pickup OTP" 
           visible={showSRModal} 
           onHide={() => setShowSRModal(false)} 
           breakpoints={{'960px': '75vw'}} 
-          style={{width: '90vw'}}
+        
           //position={'top'}
           >
           <div className='pt-2'>
             <InputText 
-              style={{width:"75vw"}}
+              style={{width:"300px"}}
               value={SRNumber}
               onChange={(e)=>setSRNumber(e.target.value)}
+              onKeyDown={(e) => {
+                (e.code === 'Enter' || e.code === 'NumpadEnter') && getSRDetails()
+              }}
               />
           </div>
           <div className='mx-auto text-center mt-6'>
             <Button 
              disabled={SRNumber==""}
              label="Submit" 
-             icon="pi pi-check" 
+            
              loading={loadingSRBtn}
              className='p-button-info'
              onClick={getSRDetails}
              />
          </div>
         </Dialog>
+
+        <Dialog 
+          header="Are you sure" 
+          visible={logoutDialog} 
+          onHide={() => setLogoutDialog(false)} 
+          breakpoints={{'960px': '75vw'}} 
+          style={{width: '300px'}}
+          //position={'top'}
+          >
+          <div className='pt-2'>
+           
+          </div>
+          <div className='mx-auto text-center mt-6'>
+            <Button 
+           
+             label="Yes" 
+             className='p-button-info p-button-danger'
+             onClick={logout}
+             />
+         </div>
+        </Dialog>
+      
         </div>
     </div>
     

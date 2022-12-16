@@ -9,6 +9,7 @@ import { useRouter } from 'next/router';
 import { useGlobalData } from '../../contexts/GlobalContext';
 import { notify } from '../Notify';
 import {useAuth} from "../../contexts/UserContext"
+import { InputNumber } from 'primereact/inputnumber';
 
 const MainPage = () => {
   const [showSRModal,setShowSRModal]=useState(false)
@@ -183,10 +184,11 @@ const MainPage = () => {
           //position={'top'}
           >
           <div className='pt-2'>
-            <InputText 
+            <InputNumber
+              useGrouping={false}
               style={{width:"300px"}}
               value={SRNumber}
-              onChange={(e)=>setSRNumber(e.target.value)}
+              onChange={(e)=>setSRNumber(e.value)}
               onKeyDown={(e) => {
                 (e.code === 'Enter' || e.code === 'NumpadEnter') && getSRDetails()
               }}

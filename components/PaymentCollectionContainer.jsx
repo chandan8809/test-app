@@ -12,15 +12,17 @@ import { Toast } from 'primereact/toast';
 import { notify } from './Notify';
 
 
-const PaymentCollectionContainer = () => {
+const PaymentCollectionContainer = ({SRNumber}) => {
+ 
+  const [SRDetails,setSRDetails]=useState()
   const [counter, setCounter] = useState(0);
   const [startTimer,setStartTimer]=useState(false)
   const [collectedAmount,setCollectedAmount]=useState(null)
   const [cameraModal,setCameraModal]=useState(false)
   const router=useRouter()
-  const {moneyDepositeUrl,setMoneyDepositeUrl,SRDetails,setGlobalLoader}=useGlobalData()
+  const {moneyDepositeUrl,setMoneyDepositeUrl,setGlobalLoader}=useGlobalData()
   const inputRef=useRef()
-  const [file, setFile] = useState()
+  const [file, setFile] = useState(null)
 
   useEffect(() => {
     if(startTimer)
@@ -29,6 +31,27 @@ const PaymentCollectionContainer = () => {
       setStartTimer(false)
     }
   }, [counter,startTimer]);
+
+  useEffect(()=>{
+      getSRDetails()
+  },[])
+
+
+  const getSRDetails = async()=>{
+    setGlobalLoader(true)
+    const response = await collectionServiceObj.getSRDetails(SRNumber)
+  
+    if(response.ok){
+      const responseData=response.data
+      setSRDetails(responseData)
+    }
+    else{
+      const error=response.error
+      notify("error",error.error_message)
+    }
+    setGlobalLoader(false)
+  }
+
 
   const toast = useRef(null);
   const showError = () => {
@@ -54,7 +77,7 @@ const PaymentCollectionContainer = () => {
     formData.append("status", "CBP");
     formData.append("collected_amount", collectedAmount);
 
-    if(SRDetails.instrument_mode_tag === "CHQ"){
+    if(SRDetails?.instrument_mode_tag === "CHQ"){
       formData.append("instrument_id",SRDetails?.instrument_id );
       formData.append("file", file);
     }
@@ -62,10 +85,11 @@ const PaymentCollectionContainer = () => {
     const response= await collectionServiceObj.updateCollectionRequestPicked(SRDetails?.request_id, formData, {"Content-Type" : "multipart/form-data"})
     if(response.ok){
       const responseData=response.data
+      setSRDetails((prev)=>({...prev,status_tag:responseData.status_tag}))
     }
     else{
       const error=response.error
-      notify("error",error)
+      notify("error",error.error_message)
     }
     setGlobalLoader(false)
   }
@@ -73,12 +97,12 @@ const PaymentCollectionContainer = () => {
   const onDepositeButtonClick=()=>{
     if(SRDetails?.status_tag === "CRQ"){
       setStartTimer(true)
-      setCounter(10)
+      setCounter(30)
       updateCollectionRequestUpdate()
     }
     else if(SRDetails?.status_tag === "CBP"){
       setStartTimer(true)
-      setCounter(10)
+      setCounter(30)
       resendOTPcall()
     }
   }
@@ -110,12 +134,12 @@ const PaymentCollectionContainer = () => {
       </div>
      
 
-      {SRDetails.instrument_mode_tag ==="CHQ" &&<div className='flex flex-col p-2'>
+      {SRDetails?.instrument_mode_tag ==="CHQ" &&<div className='flex flex-col p-2'>
         <p className='text-sm'>Beneficiary Name</p>
         <p className='text-[16px]'>{SRDetails?.beneficiary_name}</p>
       </div>}
 
-      {SRDetails.instrument_mode_tag ==="CHQ" &&
+      {SRDetails?.instrument_mode_tag ==="CHQ" &&
       <div className='flex'>
         <div className='flex flex-col p-2 flex-1'>
           <p className='text-sm'>Mode</p>
@@ -127,7 +151,7 @@ const PaymentCollectionContainer = () => {
         </div>
       </div>}
 
-      {SRDetails.instrument_mode_tag ==="CSH" &&
+      {SRDetails?.instrument_mode_tag ==="CSH" &&
        <div className='flex flex-col p-2'>
         <p className='text-sm'>Mode</p>
         <p className='text-[16px]'>{SRDetails?.instrument_mode}</p>
@@ -138,7 +162,7 @@ const PaymentCollectionContainer = () => {
         <p className='text-[16px]'>{moment(SRDetails?.request_date).utc().format('YYYY-MM-DD')}</p>
       </div>
       <div className='flex flex-col p-2'>
-        <p className='text-[16px] text-gray-900 mb-2'>{SRDetails.instrument_mode_tag ==="CSH" ?"Cash Pickup Amount":"Cheque Amount"}</p>
+        <p className='text-[16px] text-gray-900 mb-2'>{SRDetails?.instrument_mode_tag ==="CSH" ?"Cash Pickup Amount":"Cheque Amount"}</p>
       
           <InputNumber 
             inputId="locale-indian" 
@@ -151,7 +175,7 @@ const PaymentCollectionContainer = () => {
             />
       </div>
 
-     {SRDetails.instrument_mode_tag ==="CHQ" && 
+     {SRDetails?.instrument_mode_tag ==="CHQ" && 
       <div className="form-group flex flex-col p-2">
           <label htmlFor="invoiceNumber" className='text-m text-gray'  >
             Image upload
@@ -219,7 +243,7 @@ const PaymentCollectionContainer = () => {
     <div className='text-center absolute bottom-8 left-0 right-0 mx-auto'>
       {counter !==0 && <p className='pb-4 text-red-600'>Retry sending OTP in {counter}</p>}
       <Button 
-        disabled={startTimer || collectedAmount==null}
+        disabled={SRDetails?.instrument_mode_tag ==="CHQ" ?startTimer || collectedAmount==null || !file : startTimer || collectedAmount==null}
         label='Pickup and Get OTP' 
         className='p-button-info'
         onClick={onDepositeButtonClick}

@@ -31,6 +31,8 @@ const DepositeContainer = () => {
     const response= await collectionServiceObj.updateCollectionRequestDeposited(depositeRequestDetails?.request_id, formData, {"Content-Type" : "multipart/form-data"})
     if(response.ok){
       const responseData=response.data
+      notify("success",responseData.message)
+      router.push("/")
     }
     else{
       const error=response.error

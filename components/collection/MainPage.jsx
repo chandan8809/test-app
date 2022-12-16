@@ -31,16 +31,21 @@ const MainPage = () => {
     if(response.ok){
       const responseData=response.data
       setSRDetails(responseData)
-      router.push("/payment-collection")
+      gotoCollectionPage()
     }
     else{
       const error=response.error
       notify("error",error.error_message)
     }
-   
     setGlobalLoader(false)
-    
   }
+
+  const gotoCollectionPage=()=>{
+    router.push({
+      pathname: `/payment-collection/${SRNumber}`,
+    });
+  }
+
 
   const getAllCollection = async () => {
     setGlobalLoader(true)

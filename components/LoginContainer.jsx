@@ -41,25 +41,28 @@ const LoginContainer = () => {
       {/* <Toast ref={toast} position="bottom-center"/> */}
         <span className="p-float-label" >
           <InputText 
-             style={{width:"233px"}}
+             style={{width:"270px"}}
              id="username" 
              value={username}
              onChange={(e)=>setUsername(e.target.value)}
-             className={errorLogin && "p-invalid block"} />
+             className={errorLogin && "p-invalid block"} 
+             onKeyDown={(e) => {
+              (e.code === 'Enter' || e.code === 'NumpadEnter') && (username && password) && handleSubmit()
+             }}
+             />
           <label htmlFor="username">Username</label>
         </span>
 
         <span className="p-float-label mt-8" >
           <Password 
-            style={{width:"233px"}} 
+           
             value={password} 
             onChange={(e) => setPassword(e.target.value)} 
             feedback={false} 
             toggleMask
             className={errorLogin && "p-invalid block"} 
             onKeyDown={(e) => {
-              (e.code === 'Enter' || e.code === 'NumpadEnter') && handleSubmit()
-              // getStocks(e.target.value)
+              (e.code === 'Enter' || e.code === 'NumpadEnter') && (username && password) && handleSubmit()
             }}
             />
           <label htmlFor="username">Password</label>
@@ -67,6 +70,7 @@ const LoginContainer = () => {
  
         <div className='pt-6 items-center'>
           <Button 
+            disabled={!password || !username}
             loading={loadingBtn}
             label="Submit" 
             className="p-button-info w-40"

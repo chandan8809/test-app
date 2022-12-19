@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
-import {priceBodyTemplate} from "../common/Helper"
 import { collectionServiceObj } from '../../services/collectionService';
 import moment from "moment"
 import { Button } from 'primereact/button';
@@ -8,13 +7,13 @@ import { useRouter } from 'next/router';
 import { useGlobalData } from '../../contexts/GlobalContext';
 import { notify } from '../Notify';
 import { Dialog } from 'primereact/dialog';
-import { InputText } from 'primereact/inputtext';
 import { InputNumber } from 'primereact/inputnumber';
 
 
 
 const ListPendingCollectionContainer = () => {
   const [inHandCollectionList,setInHandCollectionList]=useState([])
+  const [showEmptyMessage,setShowEmptyMessage]=useState(false)
   const [dataForFilter,setDataForFilter]=useState([])
   const router = useRouter();
 
@@ -33,6 +32,9 @@ const ListPendingCollectionContainer = () => {
     const response= await collectionServiceObj.getCollectionListPending()
     if(response.ok){
       const responseData=response.data
+      if(responseData.length===0){
+        setShowEmptyMessage(true)
+      }
       setInHandCollectionList(responseData)
       setDataForFilter(responseData)
     }
@@ -76,7 +78,7 @@ const ListPendingCollectionContainer = () => {
           <div className='flex items-center pt-8 gap-2'>
             <Image 
               src='/Back.svg' 
-              alt='Tez POS Logo' 
+              alt='Logo' 
               width={26} 
               height={26} 
               onClick={()=> router.push(`/collection`)}
@@ -112,6 +114,8 @@ const ListPendingCollectionContainer = () => {
              </div>
 
             ))}
+
+            {showEmptyMessage && <p className='text-base mt-10 text-center text-gray-500'>No Pending collection</p>}
            
           </div>
           <Dialog 

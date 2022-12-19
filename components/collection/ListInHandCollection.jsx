@@ -10,6 +10,7 @@ import { Button } from 'primereact/button';
 
 const ListInHandCollection = () => {
   const [inHandCollectionList,setInHandCollectionList]=useState([])
+  const [showEmptyMessage,setShowEmptyMessage]=useState(false)
   const [dataForFilter,setDataForFilter]=useState([])
   const router = useRouter();
   const {setDepositeRequestDataAvailable,setGlobalLoader}=useGlobalData({})
@@ -35,6 +36,9 @@ const ListInHandCollection = () => {
    
     if(response.ok){
       const responseData=response.data
+      if(responseData.length===0){
+        setShowEmptyMessage(true)
+      }
       setGlobalLoader(false)
       setInHandCollectionList(responseData)
       setDataForFilter(responseData)
@@ -88,7 +92,7 @@ const ListInHandCollection = () => {
          <div className='flex items-center pt-8 gap-2'>
             <Image 
               src='/Back.svg' 
-              alt='Tez POS Logo' 
+              alt='Logo' 
               width={26} 
               height={26} 
               onClick={gotoMainPage}
@@ -129,9 +133,10 @@ const ListInHandCollection = () => {
                   <p className='text-blue-600 mt-0.5 font-semibold text-[18px]'>Deposit Now</p>
                </div>
              </div>
-
+    
             ))}
            
+            {showEmptyMessage && <p className='text-base mt-10 text-center text-gray-500'>No In-Hand collection</p>}
           </div>
       </div>
     )

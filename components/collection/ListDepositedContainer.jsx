@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
-import {priceBodyTemplate} from "../common/Helper"
 import { collectionServiceObj } from '../../services/collectionService';
 import moment from "moment"
 import { useRouter } from 'next/router';
@@ -11,6 +10,7 @@ import { Button } from 'primereact/button';
 
 const ListDepositedContainer = () => {
   const [inHandCollectionList,setInHandCollectionList]=useState([])
+  const [showEmptyMessage,setShowEmptyMessage]=useState(false)
   const [dataForFilter,setDataForFilter]=useState([])
   const router = useRouter();
   const {setGlobalLoader}=useGlobalData()
@@ -25,6 +25,9 @@ const ListDepositedContainer = () => {
     const response= await collectionServiceObj.getDepositedList()
     if(response.ok){
       const responseData=response.data
+      if(responseData.length===0){
+        setShowEmptyMessage(true)
+      }
       setInHandCollectionList(responseData)
       setDataForFilter(responseData)
     }
@@ -46,7 +49,7 @@ const ListDepositedContainer = () => {
           <div className='flex items-center pt-8 gap-2'>
             <Image 
               src='/Back.svg' 
-              alt='Tez POS Logo' 
+              alt='Logo' 
               width={26} 
               height={26} 
               onClick={()=> router.push(`/collection`)}
@@ -68,7 +71,6 @@ const ListDepositedContainer = () => {
           </div>
 
           <div className='flex flex-col  justify-around pt-8 text-gray-700 '>
-
             {inHandCollectionList.map((item,index)=>(
 
              <div key={index} 
@@ -79,9 +81,8 @@ const ListDepositedContainer = () => {
                   <p className=' mt-0.5 text-xs'>Pickup Date : {moment(item.requested_at).utc().format('Do MMM, YYYY')}</p>
                </div>
              </div>
-
             ))}
-           
+            {showEmptyMessage && <p className='text-base mt-10 text-center text-gray-500'>No Deposited collection</p>}
           </div>
          
       </div>

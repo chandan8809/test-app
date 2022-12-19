@@ -13,7 +13,7 @@ import { notify } from './Notify';
 
 
 const PaymentCollectionContainer = ({SRNumber}) => {
- 
+  const [OTPsendCount,setOTPsendCount]=useState(0)
   const [SRDetails,setSRDetails]=useState()
   const [counter, setCounter] = useState(0);
   const [startTimer,setStartTimer]=useState(false)
@@ -63,6 +63,9 @@ const PaymentCollectionContainer = ({SRNumber}) => {
     const response = await collectionServiceObj.resendOTP(SRDetails?.request_id)
     if(response.ok){
       const responseData=response.data
+      setStartTimer(true)
+      setCounter(30)
+      setOTPsendCount(prev=>prev+1)
     }
     else{
       const error=response.error
@@ -88,6 +91,7 @@ const PaymentCollectionContainer = ({SRNumber}) => {
       setSRDetails((prev)=>({...prev,status_tag:responseData.status_tag}))
       setStartTimer(true)
       setCounter(30)
+      setOTPsendCount(prev=>prev+1)
     }
     else{
       const error=response.error
@@ -97,13 +101,14 @@ const PaymentCollectionContainer = ({SRNumber}) => {
   }
 
   const onDepositeButtonClick=()=>{
+    if(OTPsendCount>=3){
+      notify("error","OTP send limit exceed")
+      return;
+    }
     if(SRDetails?.status_tag === "CRQ"){
-     
       updateCollectionRequestUpdate()
     }
     else if(SRDetails?.status_tag === "CBP"){
-      setStartTimer(true)
-      setCounter(30)
       resendOTPcall()
     }
   }
@@ -119,7 +124,7 @@ const PaymentCollectionContainer = ({SRNumber}) => {
     <div className='flex items-center pt-8 gap-2'>
       <Image 
         src='/Back.svg' 
-        alt='Tez POS Logo' 
+        alt='Logo' 
         width={26} 
         height={26} 
         onClick={()=> router.push(`/collection`)}

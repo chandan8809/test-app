@@ -73,7 +73,7 @@ const DepositeContainer = ({requestId}) => {
     <div className='flex items-center pt-8 gap-2'>
       <Image 
         src='/Back.svg' 
-        alt='Tez POS Logo' 
+        alt='Logo' 
         width={26} 
         height={26} 
         onClick={()=> router.push(`/collection/in-hand-collection`)}

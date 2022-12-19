@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
-import { InputText } from 'primereact/inputtext';
 import { collectionServiceObj } from '../../services/collectionService';
 import {priceBodyTemplate} from "../common/Helper"
 import { useRouter } from 'next/router';
@@ -131,7 +130,7 @@ const MainPage = () => {
 
         {exceedLimit && <div className='flex flex-col gap-2 justify-around pt-2 text-gray-700 '>
           <div className='flex-1 rounded-xl flex justify-between  bg-red-100 gap-4 p-4'>
-            <Image src='/WarningIcon.svg' alt='Tez POS Logo' width={40} height={30} />
+            <Image src='/WarningIcon.svg' alt='Logo' width={40} height={30} />
             <p className='text-md font-light text-left leading-5' style={{color:"#FF1818"}}>In Hand Collection is over the limit. Please deposit immediately to continue collections</p>
           </div>
         </div>}
@@ -142,7 +141,7 @@ const MainPage = () => {
             onClick={goToListInHandPage}
             >
             <p className='text-[18px] font-semibold'>In Hand Collections</p>
-            <Image src='/ArrowSign.svg' alt='Tez POS Logo' width={12} height={22} />
+            <Image src='/ArrowSign.svg' alt='Logo' width={12} height={22} />
            
 
           </div>
@@ -151,7 +150,7 @@ const MainPage = () => {
             onClick={goToListPendingCollection}
             >
             <p className='text-[18px] font-semibold'>Pending Requests</p>
-            <Image src='/ArrowSign.svg' alt='Tez POS Logo' width={12} height={22} />
+            <Image src='/ArrowSign.svg' alt='Logo' width={12} height={22} />
           
 
           </div>
@@ -161,7 +160,7 @@ const MainPage = () => {
             onClick={goToListDeposited}
             >
             <p className='text-[18px] font-semibold'>Deposited</p>
-            <Image src='/ArrowSign.svg' alt='Tez POS Logo' width={12} height={22} />
+            <Image src='/ArrowSign.svg' alt='Logo' width={12} height={22} />
           </div>
         </div>
 

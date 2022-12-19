@@ -10,8 +10,8 @@
     z-index: 1040;
     width: 100vw;
     height: 100vh;
-    background-color: gray;
-    opacity: 0.5;
+    background-color: black;
+    opacity: 0.2;
 }
 
 .modal-spinner {

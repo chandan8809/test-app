@@ -8,6 +8,7 @@ import { useGlobalData } from '../../contexts/GlobalContext';
 import { notify } from '../Notify';
 import { Dialog } from 'primereact/dialog';
 import { InputNumber } from 'primereact/inputnumber';
+import { InputText } from 'primereact/inputtext';
 
 
 
@@ -16,6 +17,7 @@ const ListPendingCollectionContainer = () => {
   const [showEmptyMessage,setShowEmptyMessage]=useState(false)
   const [dataForFilter,setDataForFilter]=useState([])
   const router = useRouter();
+  const [searchVal,setSearchVal]=useState("")
 
   const [showSRModal,setShowSRModal]=useState(false)
   const [SRNumber,setSRNumber]=useState("")
@@ -72,20 +74,27 @@ const ListPendingCollectionContainer = () => {
     });
   }
 
+  const searchByStoreName = (data)=>{
+    const searchedStore = dataForFilter.filter(item=>item.source_name.toLowerCase().includes(data.trim().toLowerCase()))
+    setInHandCollectionList(searchedStore)
+  }
 
   return (
       <div className=' px-4'>
-          <div className='flex items-center pt-8 gap-2'>
-            <Image 
-              src='/Back.svg' 
-              alt='Logo' 
-              width={26} 
-              height={26} 
-              onClick={()=> router.push(`/collection`)}
-              />
-            <h1 className='text-[18px] font-semibold text-blue-700'>Pending Requests</h1>
-          </div>
+        <div className='flex items-center pt-8 justify-between'>
+            <div className='flex items-center gap-2'>
+              <Image 
+                src='/Back.svg' 
+                alt='Logo' 
+                width={26} 
+                height={26} 
+                onClick={()=> router.push(`/collection`)}
+                />
+              <h1 className='text-[18px] font-semibold text-blue-700'>Pending Requests</h1>
+            </div>
 
+            <Button  className='p-button-info p-button-sm'  onClick={() => setShowSRModal(true)} >Pickup OTP</Button>
+          </div>
           <div className='flex justify-around pt-10'>
               <Button 
                 label='CASH' 
@@ -98,13 +107,23 @@ const ListPendingCollectionContainer = () => {
                 onClick={()=>selectCashOrCheque("Cheque")}
                 />
           </div>
+          <div className='pt-5 text-center'>
+           <InputText 
+             className='p-inputtext-sm w-[300px]' 
+             placeholder='search by store' 
+             value={searchVal}
+             onChange={(e)=>{
+               setSearchVal(e.target.value)
+               searchByStoreName(e.target.value)
+              }}
+             />
+          </div>
 
           <div className='flex flex-col  justify-around pt-8 text-gray-700 '>
 
             {inHandCollectionList.map((item,index)=>(
 
              <div key={index} 
-               onClick={()=>setShowSRModal(true)}
                className='flex-1 rounded-xl flex p-2 bg-gray-100 shadow-md justify-between mt-3 cursor-pointer'>
                <div className='flex flex-col flex-[60%]'>
                   <p className='text-[16px]  font-semibold  mt-0.5'>{item?.instrument_mode}</p>

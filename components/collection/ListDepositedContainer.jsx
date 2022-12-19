@@ -6,10 +6,12 @@ import { useRouter } from 'next/router';
 import { useGlobalData } from '../../contexts/GlobalContext';
 import { notify } from '../Notify';
 import { Button } from 'primereact/button';
+import { InputText } from 'primereact/inputtext';
 
 
 const ListDepositedContainer = () => {
   const [inHandCollectionList,setInHandCollectionList]=useState([])
+  const [searchVal,setSearchVal]=useState("")
   const [showEmptyMessage,setShowEmptyMessage]=useState(false)
   const [dataForFilter,setDataForFilter]=useState([])
   const router = useRouter();
@@ -43,6 +45,11 @@ const ListDepositedContainer = () => {
     setInHandCollectionList(cashFilter)
   }
  
+  const searchByStoreName = (data)=>{
+    const searchedStore = dataForFilter.filter(item=>item.source_name.toLowerCase().includes(data.trim().toLowerCase()))
+    setInHandCollectionList(searchedStore)
+  }
+
 
   return (
       <div className=' px-4'>
@@ -68,6 +75,18 @@ const ListDepositedContainer = () => {
                 className='w-[150px] p-button-info p-button-raised p-button-outlined'
                 onClick={()=>selectCashOrCheque("Cheque")}
                 />
+          </div>
+
+          <div className='pt-5 text-center'>
+           <InputText 
+             className='p-inputtext-sm w-[300px]' 
+             placeholder='search by store' 
+             value={searchVal}
+             onChange={(e)=>{
+               setSearchVal(e.target.value)
+               searchByStoreName(e.target.value)
+              }}
+             />
           </div>
 
           <div className='flex flex-col  justify-around pt-8 text-gray-700 '>

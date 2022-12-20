@@ -172,7 +172,8 @@ const ListInHandCollection = () => {
                   <p className='text-[18px] font-bold'>{priceBodyTemplate(item?.collected_amount)}</p>
                   <p className='text-[16px]  font-semibold  mt-0.5'>{item?.instrument_mode}</p>
                   <p className=' mt-0.5 text-xs'>store : {item?.source_name}</p>
-                  {item.completed_at!==null && <p className=' mt-0.5 text-xs'>Pickup Date : {moment(item.completed_at).utc().format('Do MMM, YYYY')}</p>}
+                  {<p className=' mt-0.5 text-xs'>Request Date : {moment(item.requested_at).utc().format('Do MMM, YYYY')}</p>}
+                  {<p className=' mt-0.5 text-xs'>Pickup Date : {moment(item.completed_at).utc().format('Do MMM, YYYY')}</p>}
                </div>
 
                <div className='flex flex-col felx-[40%] justify-between'>

@@ -13,11 +13,11 @@ import { notify } from './Notify';
 
 const DepositeContainer = ({requestId}) => {
   const [showSRModal,setShowSRModal]=useState(false)
-  const [referenceNo,setReferenceNo]=useState(null)
-  const [file, setFile] = useState()
+  const [referenceNo,setReferenceNo]=useState("")
+  const [file, setFile] = useState(null)
   const [depositeRequestDetails,setDepositeRequestDetails]=useState()
   const {moneyDepositeUrl,setMoneyDepositeUrl,setGlobalLoader,depositeRequestDataAvailable}=useGlobalData()
-  const inputRef=useRef()
+  const inputRef=useRef(null)
 
   const router=useRouter()
 
@@ -135,7 +135,7 @@ const DepositeContainer = ({requestId}) => {
     </div>
     <div className='text-center  bottom-0 left-0 right-0 mx-auto'>
       <Button 
-        disabled={!referenceNo}
+        disabled={!referenceNo || !file}
         label='Deposit' 
         className='p-button-info'
         onClick={updateCollectionRequestDeposited}

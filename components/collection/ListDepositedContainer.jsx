@@ -116,11 +116,12 @@ const ListDepositedContainer = () => {
             {inHandCollectionList.map((item,index)=>(
 
              <div key={index} 
-               className='flex-1 rounded-xl flex p-2 bg-gray-100 shadow-md justify-between mt-3 cursor-pointer'>
+               className='flex-1 rounded-xl flex p-2 bg-gray-100 shadow-md justify-between mt-3 '>
                <div className='flex flex-col flex-[60%]'>
                   <p className='text-[16px]  font-semibold  mt-0.5'>{item?.instrument_mode}</p>
                   <p className=' mt-0.5 text-xs'>store : {item?.source_name}</p>
-                  <p className=' mt-0.5 text-xs'>Pickup Date : {moment(item.requested_at).utc().format('Do MMM, YYYY')}</p>
+                  <p className=' mt-0.5 text-xs'>Pickup Date : {moment(item.completed_at).utc().format('Do MMM, YYYY')}</p>
+                  <p className=' mt-0.5 text-xs'>Deposit Date : {moment(item.deposited_at).utc().format('Do MMM, YYYY')}</p>
                </div>
              </div>
             ))}

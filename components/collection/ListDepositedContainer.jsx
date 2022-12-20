@@ -30,11 +30,6 @@ const ListDepositedContainer = () => {
     getListDeposited()
   },[])
 
-    
-  useEffect(()=>{
-    searchByStoreName(searchVal)
-  },[activeIndex])
-
  
   const getListDeposited= async()=>{
     setGlobalLoader(true)
@@ -59,11 +54,13 @@ const ListDepositedContainer = () => {
     if(data==="All"){
       setInHandCollectionList(dataForFilter)
       setDataForSearch(dataForFilter)
+      setSearchVal("")
       return;
     }
     const cashFilter=dataForFilter.filter(item=>item.instrument_mode==data)
     setInHandCollectionList(cashFilter)
     setDataForSearch(cashFilter)
+    setSearchVal("")
   }
  
   const searchByStoreName = (data)=>{

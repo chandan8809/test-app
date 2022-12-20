@@ -30,10 +30,6 @@ const ListInHandCollection = () => {
     loadInitalData()
   },[router])
 
-  useEffect(()=>{
-    if(searchVal)
-    searchByStoreName(searchVal)
-  },[activeIndex])
 
 
   const loadInitalData = async()=>{
@@ -98,11 +94,13 @@ const ListInHandCollection = () => {
     if(data==="All"){
       setInHandCollectionList(dataForFilter)
       setDataForSearch(dataForFilter)
+      setSearchVal("")
       return;
     }
     const cashFilter=dataForFilter.filter(item=>item.instrument_mode==data)
     setInHandCollectionList(cashFilter)
     setDataForSearch(cashFilter)
+    setSearchVal("")
   }
 
   const selectCashOrChequeInitail=(data,initalData)=>{

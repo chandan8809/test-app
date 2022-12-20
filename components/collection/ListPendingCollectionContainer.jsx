@@ -37,9 +37,6 @@ const ListPendingCollectionContainer = () => {
     getCollectionListPending()
   },[])
   
-  useEffect(()=>{
-    searchByStoreName(searchVal)
-  },[activeIndex])
 
  
   const getCollectionListPending= async()=>{
@@ -81,11 +78,13 @@ const ListPendingCollectionContainer = () => {
     if(data==="All"){
       setInHandCollectionList(dataForFilter)
       setDataForSearch(dataForFilter)
+      setSearchVal("")
       return;
     }
     const cashFilter=dataForFilter.filter(item=>item.instrument_mode==data)
     setInHandCollectionList(cashFilter)
     setDataForSearch(cashFilter)
+    setSearchVal("")
   }
 
   const gotoCollectionPage=()=>{

@@ -30,7 +30,10 @@ const ListInHandCollection = () => {
     loadInitalData()
   },[router])
 
-
+  function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }
 
   const loadInitalData = async()=>{
     if(router?.query?.request){
@@ -121,7 +124,8 @@ const ListInHandCollection = () => {
   }
 
   return (
-      <div className=' px-4'>
+      <div >
+        <div className='px-4 pb-8 sticky bg-white top-0 '>
          <div className='flex items-center pt-8 gap-2'>
             <Image 
               src='/Back.svg' 
@@ -142,6 +146,7 @@ const ListInHandCollection = () => {
             onTabChange={(e) => {
               setActiveIndex(e.index)
               selectCashOrCheque(e.value.label)
+              topFunction() 
          
             }} 
             />
@@ -157,17 +162,17 @@ const ListInHandCollection = () => {
               }}
              />
           </div>
+        </div>
           
-          <div className='flex flex-col  justify-around pt-3 text-gray-700 '>
+          <div className='flex flex-col  justify-around text-gray-700 px-4'>
 
             {inHandCollectionList.map((item,index)=>(
-
              <div key={index} 
                className='flex-1 rounded-xl flex p-2 bg-gray-100 shadow-md justify-between mt-3 active:bg-gray-200 cursor-pointer'
                onClick={()=>getDepositeRequestDetails(item.id)}
                >
                <div className='flex flex-col flex-[60%]'>
-                  <p className='text-[18px] font-bold'>{priceBodyTemplate(item?.collected_amount)}</p>
+                  
                   <p className='text-[16px]  font-semibold  mt-0.5'>{item?.instrument_mode}</p>
                   <p className=' mt-0.5 text-xs'>store : {item?.source_name}</p>
                   {<p className=' mt-0.5 text-xs'>Request Date : {moment(item.requested_at).utc().format('Do MMM, YYYY')}</p>}
@@ -175,8 +180,7 @@ const ListInHandCollection = () => {
                </div>
 
                <div className='flex flex-col felx-[40%] justify-between'>
-                  <p className='text-[18px]   text-red-500 text-right'>In Hand</p>
-                  
+                 <p className='text-[18px] font-bold'>{priceBodyTemplate(item?.collected_amount)}</p>
                   <p className='text-blue-600 mt-0.5 font-semibold text-[18px]'>Deposit Now</p>
                </div>
              </div>

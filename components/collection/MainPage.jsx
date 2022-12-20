@@ -14,7 +14,7 @@ const MainPage = () => {
   const [showSRModal,setShowSRModal]=useState(false)
   const [collectionSummary,setCollectionSummary]=useState({})
   const [exceedLimit,setExceedLimit]=useState(false)
-  const [SRNumber,setSRNumber]=useState("")
+  const [SRNumber,setSRNumber]=useState(null)
   const [loadingSRBtn,setLoadingSRBtn]=useState(false)
   const router = useRouter();
   const {setSRDetails,setGlobalLoader}=useGlobalData()
@@ -37,7 +37,7 @@ const MainPage = () => {
     }
     else{
       const error=response.error
-      notify("error","Please enter valid Pickup OTP")
+      notify("error",error.error_message)
     }
     setLoadingSRBtn(false)
   }
@@ -54,7 +54,7 @@ const MainPage = () => {
     let response = await collectionServiceObj.getCollectionSummary()
     if(response.ok){
       const responseData=response.data
-      if(responseData?.cash?.amount > responseData?.limit){
+      if(responseData?.cash?.amount > (responseData?.limit*0.8)){
         setExceedLimit(true)
       }else{
         setExceedLimit(false)
@@ -107,14 +107,14 @@ const MainPage = () => {
   return (
     <div className='text-center px-4'>
         
-        <h1 className='text-xl font-semibold pt-10 text-blue-700'>All Collection</h1>
+        <h1 className='text-xl font-semibold pt-10 text-blue-700'>All Collections</h1>
         <div className='flex gap-2 justify-around pt-10 text-gray-700 '>
           <div 
             className={`flex-1 cursor-pointer rounded-xl flex flex-col p-2 bg-green-100 shadow-md ${exceedLimit && "border-red-500 border"}`}
             onClick={goToListInHandPageCash}
             >
             <p className='text-[18px] font-light text-gray-500'>Cash in Hand</p>
-            <p className='text-xl font-bold mt-1'>{priceBodyTemplate(collectionSummary?.cash?.amount)}</p>
+            <p className='text-xl font-bold mt-1'>{collectionSummary?.cash?.amount ? priceBodyTemplate(collectionSummary?.cash?.amount) :"---"}</p>
             <p className='text-gray-500 mt-0.5 text-sm'>({collectionSummary?.cash?.n_stores} Stores)</p>
 
           </div>
@@ -123,7 +123,7 @@ const MainPage = () => {
             onClick={goToListInHandPageCheque}
             >
             <p className='text-[18px] font-light text-gray-500'>Cheques in Hand</p>
-            <p className='text-xl font-bold mt-1'>{collectionSummary?.cheque?.count}</p>
+            <p className='text-xl font-bold mt-1'>{collectionSummary?.cheque?.count ?? "---"}</p>
             <p className='text-gray-500 mt-0.5 text-sm'>({collectionSummary?.cheque?.n_stores} Stores)</p>
           </div>
         </div>
@@ -131,7 +131,7 @@ const MainPage = () => {
         {exceedLimit && <div className='flex flex-col gap-2 justify-around pt-2 text-gray-700 '>
           <div className='flex-1 rounded-xl flex justify-between  bg-red-100 gap-4 p-4'>
             <Image src='/WarningIcon.svg' alt='Logo' width={40} height={30} />
-            <p className='text-md font-light text-left leading-5' style={{color:"#FF1818"}}>In Hand Collection is over the limit. Please deposit immediately to continue collections</p>
+            <p className='text-md font-light text-left leading-5' style={{color:"#FF1818"}}>In Hand Collection is about to reach the limit. Please deposit immediately to continue collections ( limit left {priceBodyTemplate(collectionSummary?.limit - collectionSummary?.cash?.amount)})</p>
           </div>
         </div>}
 
@@ -164,12 +164,8 @@ const MainPage = () => {
           </div>
         </div>
 
-        <div className='absolute top-7'>
-         <Button 
-          onClick={()=>setLogoutDialog(true)} 
-          label='Logout' 
-          className='p-button-small p-button-danger p-button-rounded p-button-text '
-          />
+        <div className='absolute top-9'>
+          <Image  onClick={()=>setLogoutDialog(true)}  src='/logout.svg' alt='Logo' width={30} height={30} />
         </div>
        
         <div className='bottom-8 absolute left-0 right-0 mx-auto'>
@@ -179,13 +175,13 @@ const MainPage = () => {
           visible={showSRModal} 
           onHide={() => setShowSRModal(false)} 
           breakpoints={{'960px': '75vw'}} 
-        
+          style={{width:"320px"}}
           //position={'top'}
           >
-          <div className='pt-2'>
+          <div className='pt-2 mx-auto'>
             <InputNumber
               useGrouping={false}
-              style={{width:"300px"}}
+              style={{width:"270px"}}
               value={SRNumber}
               onChange={(e)=>setSRNumber(e.value)}
               onKeyDown={(e) => {
@@ -197,7 +193,7 @@ const MainPage = () => {
             <Button 
              disabled={SRNumber==""}
              label="Submit" 
-            
+       
              loading={loadingSRBtn}
              className='p-button-info'
              onClick={getSRDetails}
@@ -216,12 +212,19 @@ const MainPage = () => {
           <div className='pt-2'>
            
           </div>
-          <div className='mx-auto text-center mt-6'>
+          <div className='mx-auto text-center mt-6 flex justify-around'>
             <Button 
-           
+             style={{width:"90px"}}
              label="Yes" 
-             className='p-button-info p-button-danger'
+             className=' p-button-danger p-button-sm'
              onClick={logout}
+             />
+
+            <Button 
+             style={{width:"90px"}}
+             label="No" 
+             className='p-button-info p-button-sm'
+             onClick={()=>setLogoutDialog(false)}
              />
          </div>
         </Dialog>

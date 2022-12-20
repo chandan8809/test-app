@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { collectionServiceObj } from '../../services/collectionService';
-import moment from "moment"
+import moment from "moment";
 import { Button } from 'primereact/button';
 import { useRouter } from 'next/router';
 import { useGlobalData } from '../../contexts/GlobalContext';
@@ -10,6 +10,7 @@ import { Dialog } from 'primereact/dialog';
 import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
 import { TabMenu } from 'primereact/tabmenu';
+import { priceBodyTemplate } from '../common/Helper';
 
 
 
@@ -23,7 +24,7 @@ const ListPendingCollectionContainer = () => {
   const [searchVal,setSearchVal]=useState("")
 
   const [showSRModal,setShowSRModal]=useState(false)
-  const [SRNumber,setSRNumber]=useState("")
+  const [SRNumber,setSRNumber]=useState(null)
   const [loadingSRBtn,setLoadingSRBtn]=useState(false)
   const {setSRDetails,setGlobalLoader}=useGlobalData()
 
@@ -37,7 +38,10 @@ const ListPendingCollectionContainer = () => {
     getCollectionListPending()
   },[])
   
-
+  function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }
  
   const getCollectionListPending= async()=>{
     setGlobalLoader(true)
@@ -69,7 +73,7 @@ const ListPendingCollectionContainer = () => {
     }
     else{
       const error=response.error
-      notify("error","Please enter valid Pickup OTP")
+      notify("error",error.error_message)
     }
     setLoadingSRBtn(false)
   }
@@ -99,8 +103,9 @@ const ListPendingCollectionContainer = () => {
   }
 
   return (
-      <div className=' px-4'>
-        <div className='flex items-center pt-8 justify-between'>
+      <div>
+         <div className='sticky top-0 bg-white px-4 pb-8'>
+         <div className='flex items-center pt-8 justify-between'>
             <div className='flex items-center gap-2'>
               <Image 
                 src='/Back.svg' 
@@ -124,13 +129,14 @@ const ListPendingCollectionContainer = () => {
             onTabChange={(e) => {
               setActiveIndex(e.index)
               selectCashOrCheque(e.value.label)
-         
+              topFunction()
             }} 
             />
           </div>
 
           <div className='pt-5 text-center'>
            <InputText 
+             maxLength="50"
              className='p-inputtext-sm w-[300px]' 
              placeholder='search by store' 
              value={searchVal}
@@ -141,7 +147,10 @@ const ListPendingCollectionContainer = () => {
              />
           </div>
 
-          <div className='flex flex-col  justify-around pt-8 text-gray-700 '>
+         </div>
+          
+
+          <div className='flex flex-col  justify-around text-gray-700 px-4'>
 
             {inHandCollectionList.map((item,index)=>(
 
@@ -151,6 +160,10 @@ const ListPendingCollectionContainer = () => {
                   <p className='text-[16px]  font-semibold  mt-0.5'>{item?.instrument_mode}</p>
                   <p className=' mt-0.5 text-xs'>store : {item?.source_name}</p>
                   <p className=' mt-0.5 text-xs'>Request Date : {moment(item.requested_at).utc().format('Do MMM, YYYY')}</p>
+               </div>
+               <div className='flex flex-col felx-[40%] justify-between'>
+                 <p className='text-[18px] font-bold'>{priceBodyTemplate(item?.request_amount)}</p>
+                 
                </div>
              </div>
 
@@ -164,12 +177,13 @@ const ListPendingCollectionContainer = () => {
             visible={showSRModal} 
             onHide={() => setShowSRModal(false)} 
             breakpoints={{'960px': '75vw'}} 
+            style={{width:"320px"}}
             //position={'top'}
             >
-            <div className='pt-2'>
+            <div className='pt-2 mx-auto'>
               <InputNumber
                 useGrouping={false}
-                style={{width:"300px"}}
+                style={{width:"270px"}}
                 value={SRNumber}
                 onChange={(e)=>setSRNumber(e.value)}
                 onKeyDown={(e) => {

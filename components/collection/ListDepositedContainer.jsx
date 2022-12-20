@@ -8,6 +8,7 @@ import { notify } from '../Notify';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { TabMenu } from 'primereact/tabmenu';
+import { priceBodyTemplate } from '../common/Helper';
 
 
 const ListDepositedContainer = () => {
@@ -30,6 +31,10 @@ const ListDepositedContainer = () => {
     getListDeposited()
   },[])
 
+  function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }
  
   const getListDeposited= async()=>{
     setGlobalLoader(true)
@@ -70,7 +75,8 @@ const ListDepositedContainer = () => {
 
 
   return (
-      <div className=' px-4'>
+      <div>
+        <div className='px-4 pb-8 sticky bg-white top-0'>
           <div className='flex items-center pt-8 gap-2'>
             <Image 
               src='/Back.svg' 
@@ -92,7 +98,7 @@ const ListDepositedContainer = () => {
             onTabChange={(e) => {
               setActiveIndex(e.index)
               selectCashOrCheque(e.value.label)
-           
+              topFunction()
             }} 
             />
           </div>
@@ -108,17 +114,22 @@ const ListDepositedContainer = () => {
               }}
              />
           </div>
+        </div>
 
-          <div className='flex flex-col  justify-around pt-8 text-gray-700 '>
+          <div className='flex flex-col  justify-around text-gray-700 px-4'>
             {inHandCollectionList.map((item,index)=>(
 
              <div key={index} 
                className='flex-1 rounded-xl flex p-2 bg-gray-100 shadow-md justify-between mt-3 '>
                <div className='flex flex-col flex-[60%]'>
+                 
                   <p className='text-[16px]  font-semibold  mt-0.5'>{item?.instrument_mode}</p>
                   <p className=' mt-0.5 text-xs'>store : {item?.source_name}</p>
                   <p className=' mt-0.5 text-xs'>Pickup Date : {moment(item.completed_at).utc().format('Do MMM, YYYY')}</p>
                   <p className=' mt-0.5 text-xs'>Deposit Date : {moment(item.deposited_at).utc().format('Do MMM, YYYY')}</p>
+               </div>
+               <div className='flex flex-col felx-[40%] justify-between'>
+                  <p className='text-[18px] font-bold'>{priceBodyTemplate(item?.collected_amount)}</p>
                </div>
              </div>
             ))}

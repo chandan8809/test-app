@@ -189,7 +189,7 @@ const PaymentCollectionContainer = ({SRNumber}) => {
      {SRDetails?.instrument_mode_tag ==="CHQ" && 
       <div className="form-group flex flex-col p-2">
           <label htmlFor="invoiceNumber" className='text-m text-gray'  >
-            Cheque Image Upload
+            Cheque Image
           </label>
           <input id="fileInput" type="file" ref={inputRef}
           onChange={handleFileChange}/>

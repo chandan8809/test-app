@@ -129,7 +129,7 @@ const PaymentCollectionContainer = ({SRNumber}) => {
         height={26} 
         onClick={()=> router.push(`/collection`)}
         />
-      <h1 className='text-[18px] font-semibold text-blue-700'>Pending Requests</h1>
+      <h1 className='text-[18px] font-semibold' style={{color:"#185DBF"}}>Pending Requests</h1>
     </div>
 
     <div className='flex flex-col  justify-around pt-8 text-gray-600 gap-2'>
@@ -252,11 +252,11 @@ const PaymentCollectionContainer = ({SRNumber}) => {
     </div>
 
     <div className='text-center absolute bottom-8 left-0 right-0 mx-auto'>
-      {counter !==0 && <p className='pb-4 text-blue-600'>Please Share OTP (Retry sending OTP {counter})</p>}
+      {counter !==0 && <p className='pb-4' style={{color:"#185DBF"}}>Please Share OTP (Retry sending OTP {counter})</p>}
       <Button 
+       style={{width:"88%",maxWidth:"500px"}}
         disabled={SRDetails?.instrument_mode_tag ==="CHQ" ?startTimer || collectedAmount==null || !file : startTimer || collectedAmount==null}
         label='Pickup and Get OTP' 
-        className='p-button-info'
         onClick={onDepositeButtonClick}
         />
        

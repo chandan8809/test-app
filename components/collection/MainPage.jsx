@@ -107,7 +107,7 @@ const MainPage = () => {
   return (
     <div className='text-center px-4'>
         
-        <h1 className='text-xl font-semibold pt-10 text-blue-700'>All Collections</h1>
+        <h1 className='text-xl font-semibold pt-10' style={{color:"#185DBF"}}>All Collections</h1>
         <div className='flex gap-2 justify-around pt-10 text-gray-700 '>
           <div 
             className={`flex-1 cursor-pointer rounded-xl flex flex-col p-2 bg-green-100 shadow-md ${exceedLimit && "border-red-500 border"}`}
@@ -131,7 +131,11 @@ const MainPage = () => {
         {exceedLimit && <div className='flex flex-col gap-2 justify-around pt-2 text-gray-700 '>
           <div className='flex-1 rounded-xl flex justify-between  bg-red-100 gap-4 p-4'>
             <Image src='/WarningIcon.svg' alt='Logo' width={40} height={30} />
+           {collectionSummary?.limit - collectionSummary?.cash?.amount === 0 ? 
+                       <p className='text-md font-light text-left leading-5' style={{color:"#FF1818"}}>In Hand Collection limit reached. Please deposit immediately to continue collections</p>:
             <p className='text-md font-light text-left leading-5' style={{color:"#FF1818"}}>In Hand Collection is about to reach the limit. Please deposit immediately to continue collections ( limit left {priceBodyTemplate(collectionSummary?.limit - collectionSummary?.cash?.amount)})</p>
+
+            }
           </div>
         </div>}
 
@@ -169,19 +173,20 @@ const MainPage = () => {
         </div>
        
         <div className='bottom-8 absolute left-0 right-0 mx-auto'>
-        <Button label='Enter Pickup OTP' className='p-button-info' icon="pi pi-external-link" onClick={() => setShowSRModal(true)} />
+        <Button style={{width:"90%",maxWidth:"500px"}} label='Enter Pickup OTP'  icon="pi pi-external-link" onClick={() => setShowSRModal(true)} />
         <Dialog 
           header="Enter Pickup OTP" 
           visible={showSRModal} 
           onHide={() => setShowSRModal(false)} 
           breakpoints={{'960px': '75vw'}} 
-          style={{width:"320px"}}
+          
           //position={'top'}
           >
-          <div className='pt-2 mx-auto'>
+          <div className='pt-2 justify justify-center'>
             <InputNumber
+              autoFocus
               useGrouping={false}
-              style={{width:"270px"}}
+              style={{width:"250px",padding:"0px 16px"}}
               value={SRNumber}
               onChange={(e)=>setSRNumber(e.value)}
               onKeyDown={(e) => {
@@ -195,35 +200,35 @@ const MainPage = () => {
              label="Submit" 
        
              loading={loadingSRBtn}
-             className='p-button-info'
+            
              onClick={getSRDetails}
              />
          </div>
         </Dialog>
 
         <Dialog 
-          header="Are you sure" 
+          header="Logout" 
           visible={logoutDialog} 
           onHide={() => setLogoutDialog(false)} 
           breakpoints={{'960px': '75vw'}} 
           style={{width: '300px'}}
           //position={'top'}
           >
-          <div className='pt-2'>
-           
+          <div className='pb-4 text-center'>
+            Are You Sure?
           </div>
           <div className='mx-auto text-center mt-6 flex justify-around'>
             <Button 
              style={{width:"90px"}}
              label="Yes" 
-             className=' p-button-danger p-button-sm'
+             className='p-button-sm'
              onClick={logout}
              />
 
             <Button 
              style={{width:"90px"}}
              label="No" 
-             className='p-button-info p-button-sm'
+             className=' p-button-sm'
              onClick={()=>setLogoutDialog(false)}
              />
          </div>

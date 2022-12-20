@@ -135,9 +135,10 @@ const DepositeContainer = ({requestId}) => {
     </div>
     <div className='text-center  bottom-0 left-0 right-0 mx-auto'>
       <Button 
+        style={{width:"95%",maxWidth:"500px"}}
         disabled={!referenceNo || !file}
         label='Deposit' 
-        className='p-button-info'
+        
         onClick={updateCollectionRequestDeposited}
         />
     </div>

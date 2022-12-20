@@ -47,7 +47,7 @@ const ListPendingCollectionContainer = () => {
     setGlobalLoader(true)
     const response= await collectionServiceObj.getCollectionListPending()
     if(response.ok){
-      const responseData=response.data
+      const responseData=response?.data?.reverse()
       if(responseData.length===0){
         setShowEmptyMessage(true)
       }
@@ -114,10 +114,10 @@ const ListPendingCollectionContainer = () => {
                 height={26} 
                 onClick={()=> router.push(`/collection`)}
                 />
-              <h1 className='text-[18px] font-semibold text-blue-700'>Pending Requests</h1>
+              <h1 className='text-[18px] font-semibold' style={{color:"#185DBF"}}>Pending Requests</h1>
             </div>
 
-            <Button  className='p-button-info p-button-sm'  onClick={() => setShowSRModal(true)} >Pickup OTP</Button>
+            <Button  className='p-button-sm'  onClick={() => setShowSRModal(true)} >Pickup OTP</Button>
           </div>
         
           <div className='pt-5 flex justify-center'>
@@ -150,7 +150,7 @@ const ListPendingCollectionContainer = () => {
          </div>
           
 
-          <div className='flex flex-col  justify-around text-gray-700 px-4'>
+          <div className='flex flex-col  justify-around text-gray-700 px-4 pb-6'>
 
             {inHandCollectionList.map((item,index)=>(
 
@@ -158,11 +158,11 @@ const ListPendingCollectionContainer = () => {
                className='flex-1 rounded-xl flex p-2 bg-gray-100 shadow-md justify-between mt-3 '>
                <div className='flex flex-col flex-[60%]'>
                   <p className='text-[16px]  font-semibold  mt-0.5'>{item?.instrument_mode}</p>
-                  <p className=' mt-0.5 text-xs'>store : {item?.source_name}</p>
+                  <p className=' mt-0.5 text-xs'>Store : {item?.source_name}</p>
                   <p className=' mt-0.5 text-xs'>Request Date : {moment(item.requested_at).utc().format('Do MMM, YYYY')}</p>
                </div>
                <div className='flex flex-col felx-[40%] justify-between'>
-                 <p className='text-[18px] font-bold'>{priceBodyTemplate(item?.request_amount)}</p>
+                 <p className='text-[18px] font-bold text-right'>{priceBodyTemplate(item?.request_amount)}</p>
                  
                </div>
              </div>
@@ -177,13 +177,13 @@ const ListPendingCollectionContainer = () => {
             visible={showSRModal} 
             onHide={() => setShowSRModal(false)} 
             breakpoints={{'960px': '75vw'}} 
-            style={{width:"320px"}}
             //position={'top'}
             >
             <div className='pt-2 mx-auto'>
               <InputNumber
+                autoFocus
                 useGrouping={false}
-                style={{width:"270px"}}
+                style={{width:"250px",padding:"0px 16px"}}
                 value={SRNumber}
                 onChange={(e)=>setSRNumber(e.value)}
                 onKeyDown={(e) => {
@@ -196,7 +196,6 @@ const ListPendingCollectionContainer = () => {
               disabled={SRNumber==""}
               label="Submit" 
               loading={loadingSRBtn}
-              className='p-button-info'
               onClick={getSRDetails}
               />
           </div>

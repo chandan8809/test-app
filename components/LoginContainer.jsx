@@ -72,7 +72,7 @@ const LoginContainer = () => {
             disabled={!password || !username}
             loading={loadingBtn}
             label="Submit" 
-            className="p-button-info w-40"
+            className=" w-40"
             onClick={handleSubmit}
              />
         </div>

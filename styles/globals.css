@@ -24,6 +24,14 @@ max-width: 800px;
 padding: 2rem;
 }
 
+.p-button {
+	background-color: #185DBF!important;
+}
+
+
+.p-tabmenu .p-tabmenu-nav .p-tabmenuitem .p-menuitem-link{
+    color:#185DBF!important ;
+}
 
 
 .modal-wrapper {

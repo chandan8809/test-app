@@ -50,7 +50,7 @@ const ListInHandCollection = () => {
     const response= await collectionServiceObj.getCollectionListingInHand()
    
     if(response.ok){
-      const responseData=response.data
+      const responseData=response.data.reverse()
       if(responseData.length===0){
         setShowEmptyMessage(true)
       }
@@ -134,12 +134,12 @@ const ListInHandCollection = () => {
               height={26} 
               onClick={gotoMainPage}
               />
-            <h1 className='text-[18px] font-semibold text-blue-700'>In Hand Collections</h1>
+            <h1 className='text-[18px] font-semibold' style={{color:"#185DBF"}}>In Hand Collections</h1>
           </div>
           
            <div className='pt-5 flex justify-center'>
           <TabMenu 
-           
+            style={{color:"#185DBF"}}
             model={items} 
             activeIndex={activeIndex} 
             className="p-tabmenu-nav w-[240px]" 
@@ -164,7 +164,7 @@ const ListInHandCollection = () => {
           </div>
         </div>
           
-          <div className='flex flex-col  justify-around text-gray-700 px-4'>
+          <div className='flex flex-col  justify-around text-gray-700 px-4 pb-6'>
 
             {inHandCollectionList.map((item,index)=>(
              <div key={index} 
@@ -174,14 +174,14 @@ const ListInHandCollection = () => {
                <div className='flex flex-col flex-[60%]'>
                   
                   <p className='text-[16px]  font-semibold  mt-0.5'>{item?.instrument_mode}</p>
-                  <p className=' mt-0.5 text-xs'>store : {item?.source_name}</p>
+                  <p className=' mt-0.5 text-xs'>Store : {item?.source_name}</p>
                   {<p className=' mt-0.5 text-xs'>Request Date : {moment(item.requested_at).utc().format('Do MMM, YYYY')}</p>}
                   {<p className=' mt-0.5 text-xs'>Pickup Date : {moment(item.completed_at).utc().format('Do MMM, YYYY')}</p>}
                </div>
 
                <div className='flex flex-col felx-[40%] justify-between'>
-                 <p className='text-[18px] font-bold'>{priceBodyTemplate(item?.collected_amount)}</p>
-                  <p className='text-blue-600 mt-0.5 font-semibold text-[18px]'>Deposit Now</p>
+                 <p className='text-[18px] font-bold text-right'>{priceBodyTemplate(item?.collected_amount)}</p>
+                  <p className=' mt-0.5 font-semibold text-[18px] text-right' style={{color:"#185DBF"}}>Deposit Now</p>
                </div>
              </div>
     

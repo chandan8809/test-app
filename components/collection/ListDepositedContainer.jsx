@@ -40,7 +40,7 @@ const ListDepositedContainer = () => {
     setGlobalLoader(true)
     const response= await collectionServiceObj.getDepositedList()
     if(response.ok){
-      const responseData=response.data
+      const responseData=response?.data?.reverse()
       if(responseData.length===0){
         setShowEmptyMessage(true)
       }
@@ -85,7 +85,7 @@ const ListDepositedContainer = () => {
               height={26} 
               onClick={()=> router.push(`/collection`)}
               />
-            <h1 className='text-[18px] font-semibold text-blue-700'>Deposited</h1>
+            <h1 className='text-[18px] font-semibold' style={{color:"#185DBF"}}>Deposited</h1>
           </div>
 
          
@@ -116,20 +116,20 @@ const ListDepositedContainer = () => {
           </div>
         </div>
 
-          <div className='flex flex-col  justify-around text-gray-700 px-4'>
+          <div className='flex flex-col  justify-around text-gray-700 px-4 pb-6'>
             {inHandCollectionList.map((item,index)=>(
 
              <div key={index} 
-               className='flex-1 rounded-xl flex p-2 bg-gray-100 shadow-md justify-between mt-3 '>
+               className='flex-1 rounded-xl flex p-2 bg-gray-100 shadow-md justify-between mt-3'>
                <div className='flex flex-col flex-[60%]'>
                  
                   <p className='text-[16px]  font-semibold  mt-0.5'>{item?.instrument_mode}</p>
-                  <p className=' mt-0.5 text-xs'>store : {item?.source_name}</p>
+                  <p className=' mt-0.5 text-xs'>Store : {item?.source_name}</p>
                   <p className=' mt-0.5 text-xs'>Pickup Date : {moment(item.completed_at).utc().format('Do MMM, YYYY')}</p>
                   <p className=' mt-0.5 text-xs'>Deposit Date : {moment(item.deposited_at).utc().format('Do MMM, YYYY')}</p>
                </div>
                <div className='flex flex-col felx-[40%] justify-between'>
-                  <p className='text-[18px] font-bold'>{priceBodyTemplate(item?.collected_amount)}</p>
+                  <p className='text-[18px] font-bold text-right'>{priceBodyTemplate(item?.collected_amount)}</p>
                </div>
              </div>
             ))}

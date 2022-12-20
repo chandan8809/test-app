@@ -121,7 +121,7 @@ const DepositeContainer = ({requestId}) => {
 
       <div className='flex flex-col p-2'>
         <p className='text-sm'>Reference Number</p>
-        <InputText value={referenceNo} maxLength="50" onChange={(e) => setReferenceNo(e.target.value)} />
+        <InputText  autoComplete="off" value={referenceNo} maxLength="50" onChange={(e) => setReferenceNo(e.target.value)} />
       </div>
 
       <div className="form-group flex flex-col p-2">

@@ -171,6 +171,7 @@ const PaymentCollectionContainer = ({SRNumber}) => {
         <p className='text-[16px] text-gray-900 mb-2'>{SRDetails?.instrument_mode_tag ==="CSH" ?"Cash Pickup Amount":"Cheque Amount"}</p>
       
           <InputNumber 
+            autoComplete="off"
             inputId="locale-indian" 
             value={collectedAmount} 
             onChange={(e) => setCollectedAmount(e.value)} 

@@ -153,6 +153,7 @@ const ListInHandCollection = () => {
           </div>
           <div className='pt-5 text-center'>
            <InputText 
+             autoComplete="off"
              className='p-inputtext-sm w-[300px]' 
              placeholder='search by store' 
              value={searchVal}

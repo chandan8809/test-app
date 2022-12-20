@@ -136,6 +136,7 @@ const ListPendingCollectionContainer = () => {
 
           <div className='pt-5 text-center'>
            <InputText 
+             autoComplete="off"
              maxLength="50"
              className='p-inputtext-sm w-[300px]' 
              placeholder='search by store' 
@@ -175,15 +176,17 @@ const ListPendingCollectionContainer = () => {
           <Dialog 
             header="Enter Pickup OTP" 
             visible={showSRModal} 
-            onHide={() => setShowSRModal(false)} 
+            onHide={() => {
+              setShowSRModal(false)
+              setSRNumber(null)
+            }} 
             breakpoints={{'960px': '75vw'}} 
             //position={'top'}
             >
-            <div className='pt-2 mx-auto'>
+            <div className='pt-2 flex justify justify-center px-4'>
               <InputNumber
                 autoFocus
                 useGrouping={false}
-                style={{width:"250px",padding:"0px 16px"}}
                 value={SRNumber}
                 onChange={(e)=>setSRNumber(e.value)}
                 onKeyDown={(e) => {
@@ -193,7 +196,7 @@ const ListPendingCollectionContainer = () => {
             </div>
             <div className='mx-auto text-center mt-6'>
               <Button 
-              disabled={SRNumber==""}
+              disabled={SRNumber==null}
               label="Submit" 
               loading={loadingSRBtn}
               onClick={getSRDetails}

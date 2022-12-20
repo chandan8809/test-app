@@ -55,6 +55,7 @@ const LoginContainer = () => {
 
         <span className="p-float-label mt-8" >
           <InputText
+         
           type={"password"} 
             style={{width:"270px"}}
             value={password} 

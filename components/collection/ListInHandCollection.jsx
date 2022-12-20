@@ -8,19 +8,33 @@ import { useGlobalData } from '../../contexts/GlobalContext';
 import { notify } from '../Notify';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
+import { TabMenu } from 'primereact/tabmenu';
 
 const ListInHandCollection = () => {
   const [inHandCollectionList,setInHandCollectionList]=useState([])
+  const [dataForSearch,setDataForSearch]=useState([])
+  const [activeIndex,setActiveIndex]=useState(0)
   const [searchVal,setSearchVal]=useState("")
   const [showEmptyMessage,setShowEmptyMessage]=useState(false)
   const [dataForFilter,setDataForFilter]=useState([])
   const router = useRouter();
   const {setDepositeRequestDataAvailable,setGlobalLoader}=useGlobalData({})
 
+  const items = [
+    {label: 'All'},
+    {label: 'Cash'},
+    {label: 'Cheque'},
+  ];
 
   useEffect(()=>{
     loadInitalData()
-  },[])
+  },[router])
+
+  useEffect(()=>{
+    if(searchVal)
+    searchByStoreName(searchVal)
+  },[activeIndex])
+
 
   const loadInitalData = async()=>{
     if(router?.query?.request){
@@ -44,6 +58,7 @@ const ListInHandCollection = () => {
       setGlobalLoader(false)
       setInHandCollectionList(responseData)
       setDataForFilter(responseData)
+      setDataForSearch(responseData)
       return responseData
       
     }
@@ -80,17 +95,30 @@ const ListInHandCollection = () => {
   }
 
   const selectCashOrCheque=(data)=>{
+    if(data==="All"){
+      setInHandCollectionList(dataForFilter)
+      setDataForSearch(dataForFilter)
+      return;
+    }
     const cashFilter=dataForFilter.filter(item=>item.instrument_mode==data)
     setInHandCollectionList(cashFilter)
+    setDataForSearch(cashFilter)
   }
 
   const selectCashOrChequeInitail=(data,initalData)=>{
+    if(data==="Cash"){
+      setActiveIndex(1)
+    }
+    if(data==="Cheque"){
+      setActiveIndex(2)
+    }
     const cashFilter=initalData.filter(item=>item.instrument_mode==data)
     setInHandCollectionList(cashFilter)
+    setDataForSearch(cashFilter)
   }
 
   const searchByStoreName = (data)=>{
-    const searchedStore = dataForFilter.filter(item=>item.source_name.toLowerCase().includes(data.trim().toLowerCase()))
+    const searchedStore = dataForSearch.filter(item=>item.source_name.toLowerCase().includes(data.trim().toLowerCase()))
     setInHandCollectionList(searchedStore)
   }
 
@@ -106,17 +134,19 @@ const ListInHandCollection = () => {
               />
             <h1 className='text-[18px] font-semibold text-blue-700'>In Hand Collections</h1>
           </div>
-          <div className='flex justify-around pt-10'>
-              <Button 
-                label='CASH' 
-                className='w-[150px] p-button-info p-button-raised p-button-outlined'
-                onClick={()=>selectCashOrCheque("Cash")}
-                />
-              <Button 
-                label='CHEQUE' 
-                className='w-[150px] p-button-info p-button-raised p-button-outlined'
-                onClick={()=>selectCashOrCheque("Cheque")}
-                />
+          
+           <div className='pt-5 flex justify-center'>
+          <TabMenu 
+           
+            model={items} 
+            activeIndex={activeIndex} 
+            className="p-tabmenu-nav w-[240px]" 
+            onTabChange={(e) => {
+              setActiveIndex(e.index)
+              selectCashOrCheque(e.value.label)
+         
+            }} 
+            />
           </div>
           <div className='pt-5 text-center'>
            <InputText 

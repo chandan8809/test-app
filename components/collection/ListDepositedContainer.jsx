@@ -7,19 +7,33 @@ import { useGlobalData } from '../../contexts/GlobalContext';
 import { notify } from '../Notify';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
+import { TabMenu } from 'primereact/tabmenu';
 
 
 const ListDepositedContainer = () => {
   const [inHandCollectionList,setInHandCollectionList]=useState([])
+  const [dataForSearch,setDataForSearch]=useState([])
+  const [activeIndex,setActiveIndex]=useState(0)
   const [searchVal,setSearchVal]=useState("")
   const [showEmptyMessage,setShowEmptyMessage]=useState(false)
   const [dataForFilter,setDataForFilter]=useState([])
   const router = useRouter();
   const {setGlobalLoader}=useGlobalData()
 
+  const items = [
+    {label: 'All'},
+    {label: 'Cash'},
+    {label: 'Cheque'},
+  ];
+
   useEffect(()=>{
     getListDeposited()
   },[])
+
+    
+  useEffect(()=>{
+    searchByStoreName(searchVal)
+  },[activeIndex])
 
  
   const getListDeposited= async()=>{
@@ -32,6 +46,7 @@ const ListDepositedContainer = () => {
       }
       setInHandCollectionList(responseData)
       setDataForFilter(responseData)
+      setDataForSearch(responseData)
     }
     else{
       const error=response.error
@@ -41,12 +56,18 @@ const ListDepositedContainer = () => {
   }
 
   const selectCashOrCheque=(data)=>{
+    if(data==="All"){
+      setInHandCollectionList(dataForFilter)
+      setDataForSearch(dataForFilter)
+      return;
+    }
     const cashFilter=dataForFilter.filter(item=>item.instrument_mode==data)
     setInHandCollectionList(cashFilter)
+    setDataForSearch(cashFilter)
   }
  
   const searchByStoreName = (data)=>{
-    const searchedStore = dataForFilter.filter(item=>item.source_name.toLowerCase().includes(data.trim().toLowerCase()))
+    const searchedStore = dataForSearch.filter(item=>item.source_name.toLowerCase().includes(data.trim().toLowerCase()))
     setInHandCollectionList(searchedStore)
   }
 
@@ -64,17 +85,19 @@ const ListDepositedContainer = () => {
             <h1 className='text-[18px] font-semibold text-blue-700'>Deposited</h1>
           </div>
 
-          <div className='flex justify-around pt-10'>
-              <Button 
-                label='CASH' 
-                className='w-[150px] p-button-info p-button-raised p-button-outlined'
-                onClick={()=>selectCashOrCheque("Cash")}
-                />
-              <Button 
-                label='CHEQUE' 
-                className='w-[150px] p-button-info p-button-raised p-button-outlined'
-                onClick={()=>selectCashOrCheque("Cheque")}
-                />
+         
+            <div className='pt-5 flex justify-center'>
+          <TabMenu 
+           
+            model={items} 
+            activeIndex={activeIndex} 
+            className="p-tabmenu-nav w-[240px]" 
+            onTabChange={(e) => {
+              setActiveIndex(e.index)
+              selectCashOrCheque(e.value.label)
+           
+            }} 
+            />
           </div>
 
           <div className='pt-5 text-center'>

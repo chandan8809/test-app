@@ -37,7 +37,7 @@ const MainPage = () => {
     }
     else{
       const error=response.error
-      notify("error",error.error_message)
+      notify("error","Please enter valid Pickup OTP")
     }
     setLoadingSRBtn(false)
   }

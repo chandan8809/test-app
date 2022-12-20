@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
-import { InputText } from 'primereact/inputtext';
 import { collectionServiceObj } from '../../services/collectionService';
 import {priceBodyTemplate} from "../common/Helper"
 import { useRouter } from 'next/router';
@@ -15,7 +14,7 @@ const MainPage = () => {
   const [showSRModal,setShowSRModal]=useState(false)
   const [collectionSummary,setCollectionSummary]=useState({})
   const [exceedLimit,setExceedLimit]=useState(false)
-  const [SRNumber,setSRNumber]=useState("")
+  const [SRNumber,setSRNumber]=useState(null)
   const [loadingSRBtn,setLoadingSRBtn]=useState(false)
   const router = useRouter();
   const {setSRDetails,setGlobalLoader}=useGlobalData()
@@ -55,7 +54,7 @@ const MainPage = () => {
     let response = await collectionServiceObj.getCollectionSummary()
     if(response.ok){
       const responseData=response.data
-      if(responseData?.cash?.amount > responseData?.limit){
+      if(responseData?.cash?.amount > (responseData?.limit*0.8)){
         setExceedLimit(true)
       }else{
         setExceedLimit(false)
@@ -108,14 +107,14 @@ const MainPage = () => {
   return (
     <div className='text-center px-4'>
         
-        <h1 className='text-xl font-semibold pt-10 text-blue-700'>All Collection</h1>
+        <h1 className='text-xl font-semibold pt-10' style={{color:"#185DBF"}}>All Collections</h1>
         <div className='flex gap-2 justify-around pt-10 text-gray-700 '>
           <div 
             className={`flex-1 cursor-pointer rounded-xl flex flex-col p-2 bg-green-100 shadow-md ${exceedLimit && "border-red-500 border"}`}
             onClick={goToListInHandPageCash}
             >
             <p className='text-[18px] font-light text-gray-500'>Cash in Hand</p>
-            <p className='text-xl font-bold mt-1'>{priceBodyTemplate(collectionSummary?.cash?.amount)}</p>
+            <p className='text-xl font-bold mt-1'>{collectionSummary?.cash?.amount ? priceBodyTemplate(collectionSummary?.cash?.amount) :"---"}</p>
             <p className='text-gray-500 mt-0.5 text-sm'>({collectionSummary?.cash?.n_stores} Stores)</p>
 
           </div>
@@ -124,15 +123,19 @@ const MainPage = () => {
             onClick={goToListInHandPageCheque}
             >
             <p className='text-[18px] font-light text-gray-500'>Cheques in Hand</p>
-            <p className='text-xl font-bold mt-1'>{collectionSummary?.cheque?.count}</p>
+            <p className='text-xl font-bold mt-1'>{collectionSummary?.cheque?.count ?? "---"}</p>
             <p className='text-gray-500 mt-0.5 text-sm'>({collectionSummary?.cheque?.n_stores} Stores)</p>
           </div>
         </div>
 
         {exceedLimit && <div className='flex flex-col gap-2 justify-around pt-2 text-gray-700 '>
           <div className='flex-1 rounded-xl flex justify-between  bg-red-100 gap-4 p-4'>
-            <Image src='/WarningIcon.svg' alt='Tez POS Logo' width={40} height={30} />
-            <p className='text-md font-light text-left leading-5' style={{color:"#FF1818"}}>In Hand Collection is over the limit. Please deposit immediately to continue collections</p>
+            <Image src='/WarningIcon.svg' alt='Logo' width={40} height={30} />
+           {collectionSummary?.limit - collectionSummary?.cash?.amount === 0 ? 
+                       <p className='text-md font-light text-left leading-5' style={{color:"#FF1818"}}>In Hand Collection limit reached. Please deposit immediately to continue collections</p>:
+            <p className='text-md font-light text-left leading-5' style={{color:"#FF1818"}}>In Hand Collection is about to reach the limit. Please deposit immediately to continue collections ( limit left {priceBodyTemplate(collectionSummary?.limit - collectionSummary?.cash?.amount)})</p>
+
+            }
           </div>
         </div>}
 
@@ -142,7 +145,7 @@ const MainPage = () => {
             onClick={goToListInHandPage}
             >
             <p className='text-[18px] font-semibold'>In Hand Collections</p>
-            <Image src='/ArrowSign.svg' alt='Tez POS Logo' width={12} height={22} />
+            <Image src='/ArrowSign.svg' alt='Logo' width={12} height={22} />
            
 
           </div>
@@ -151,7 +154,7 @@ const MainPage = () => {
             onClick={goToListPendingCollection}
             >
             <p className='text-[18px] font-semibold'>Pending Requests</p>
-            <Image src='/ArrowSign.svg' alt='Tez POS Logo' width={12} height={22} />
+            <Image src='/ArrowSign.svg' alt='Logo' width={12} height={22} />
           
 
           </div>
@@ -161,32 +164,31 @@ const MainPage = () => {
             onClick={goToListDeposited}
             >
             <p className='text-[18px] font-semibold'>Deposited</p>
-            <Image src='/ArrowSign.svg' alt='Tez POS Logo' width={12} height={22} />
+            <Image src='/ArrowSign.svg' alt='Logo' width={12} height={22} />
           </div>
         </div>
 
-        <div className='absolute top-7'>
-         <Button 
-          onClick={()=>setLogoutDialog(true)} 
-          label='Logout' 
-          className='p-button-small p-button-danger p-button-rounded p-button-text '
-          />
+        <div className='absolute top-9'>
+          <Image  onClick={()=>setLogoutDialog(true)}  src='/logout.svg' alt='Logo' width={30} height={30} />
         </div>
        
         <div className='bottom-8 absolute left-0 right-0 mx-auto'>
-        <Button label='Enter Pickup OTP' className='p-button-info' icon="pi pi-external-link" onClick={() => setShowSRModal(true)} />
+        <Button style={{width:"90%",maxWidth:"500px"}} label='Enter Pickup OTP'  icon="pi pi-external-link" onClick={() => setShowSRModal(true)} />
         <Dialog 
           header="Enter Pickup OTP" 
           visible={showSRModal} 
-          onHide={() => setShowSRModal(false)} 
+          onHide={() => {
+            setShowSRModal(false)
+            setSRNumber(null)
+          }} 
           breakpoints={{'960px': '75vw'}} 
-        
+         
           //position={'top'}
           >
-          <div className='pt-2'>
+          <div className='pt-2 flex justify justify-center px-4'>
             <InputNumber
+              autoFocus
               useGrouping={false}
-              style={{width:"300px"}}
               value={SRNumber}
               onChange={(e)=>setSRNumber(e.value)}
               onKeyDown={(e) => {
@@ -196,33 +198,40 @@ const MainPage = () => {
           </div>
           <div className='mx-auto text-center mt-6'>
             <Button 
-             disabled={SRNumber==""}
+             disabled={SRNumber==null}
              label="Submit" 
-            
+       
              loading={loadingSRBtn}
-             className='p-button-info'
+            
              onClick={getSRDetails}
              />
          </div>
         </Dialog>
 
         <Dialog 
-          header="Are you sure" 
+          header="Logout" 
           visible={logoutDialog} 
           onHide={() => setLogoutDialog(false)} 
           breakpoints={{'960px': '75vw'}} 
           style={{width: '300px'}}
           //position={'top'}
           >
-          <div className='pt-2'>
-           
+          <div className='pb-4 text-center'>
+            Are You Sure?
           </div>
-          <div className='mx-auto text-center mt-6'>
+          <div className='mx-auto text-center mt-6 flex justify-around'>
             <Button 
-           
+             style={{width:"90px"}}
              label="Yes" 
-             className='p-button-info p-button-danger'
+             className='p-button-sm'
              onClick={logout}
+             />
+
+            <Button 
+             style={{width:"90px"}}
+             label="No" 
+             className=' p-button-sm'
+             onClick={()=>setLogoutDialog(false)}
              />
          </div>
         </Dialog>

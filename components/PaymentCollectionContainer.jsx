@@ -13,7 +13,7 @@ import { notify } from './Notify';
 
 
 const PaymentCollectionContainer = ({SRNumber}) => {
- 
+  const [OTPsendCount,setOTPsendCount]=useState(0)
   const [SRDetails,setSRDetails]=useState()
   const [counter, setCounter] = useState(0);
   const [startTimer,setStartTimer]=useState(false)
@@ -63,6 +63,9 @@ const PaymentCollectionContainer = ({SRNumber}) => {
     const response = await collectionServiceObj.resendOTP(SRDetails?.request_id)
     if(response.ok){
       const responseData=response.data
+      setStartTimer(true)
+      setCounter(30)
+      setOTPsendCount(prev=>prev+1)
     }
     else{
       const error=response.error
@@ -88,6 +91,7 @@ const PaymentCollectionContainer = ({SRNumber}) => {
       setSRDetails((prev)=>({...prev,status_tag:responseData.status_tag}))
       setStartTimer(true)
       setCounter(30)
+      setOTPsendCount(prev=>prev+1)
     }
     else{
       const error=response.error
@@ -97,13 +101,14 @@ const PaymentCollectionContainer = ({SRNumber}) => {
   }
 
   const onDepositeButtonClick=()=>{
+    if(OTPsendCount>=3){
+      notify("error","OTP send limit exceed")
+      return;
+    }
     if(SRDetails?.status_tag === "CRQ"){
-     
       updateCollectionRequestUpdate()
     }
     else if(SRDetails?.status_tag === "CBP"){
-      setStartTimer(true)
-      setCounter(30)
       resendOTPcall()
     }
   }
@@ -119,12 +124,12 @@ const PaymentCollectionContainer = ({SRNumber}) => {
     <div className='flex items-center pt-8 gap-2'>
       <Image 
         src='/Back.svg' 
-        alt='Tez POS Logo' 
+        alt='Logo' 
         width={26} 
         height={26} 
         onClick={()=> router.push(`/collection`)}
         />
-      <h1 className='text-[18px] font-semibold text-blue-700'>Pending Requests</h1>
+      <h1 className='text-[18px] font-semibold' style={{color:"#185DBF"}}>Pending Requests</h1>
     </div>
 
     <div className='flex flex-col  justify-around pt-8 text-gray-600 gap-2'>
@@ -166,6 +171,7 @@ const PaymentCollectionContainer = ({SRNumber}) => {
         <p className='text-[16px] text-gray-900 mb-2'>{SRDetails?.instrument_mode_tag ==="CSH" ?"Cash Pickup Amount":"Cheque Amount"}</p>
       
           <InputNumber 
+            autoComplete="off"
             inputId="locale-indian" 
             value={collectedAmount} 
             onChange={(e) => setCollectedAmount(e.value)} 
@@ -184,7 +190,7 @@ const PaymentCollectionContainer = ({SRNumber}) => {
      {SRDetails?.instrument_mode_tag ==="CHQ" && 
       <div className="form-group flex flex-col p-2">
           <label htmlFor="invoiceNumber" className='text-m text-gray'  >
-            Cheque Image Upload
+            Cheque Image
           </label>
           <input id="fileInput" type="file" ref={inputRef}
           onChange={handleFileChange}/>
@@ -247,11 +253,11 @@ const PaymentCollectionContainer = ({SRNumber}) => {
     </div>
 
     <div className='text-center absolute bottom-8 left-0 right-0 mx-auto'>
-      {counter !==0 && <p className='pb-4 text-blue-600'>Please Share OTP (Retry sending OTP {counter})</p>}
+      {counter !==0 && <p className='pb-4' style={{color:"#185DBF"}}>Please Share OTP (Retry sending OTP {counter})</p>}
       <Button 
+       style={{width:"88%",maxWidth:"500px"}}
         disabled={SRDetails?.instrument_mode_tag ==="CHQ" ?startTimer || collectedAmount==null || !file : startTimer || collectedAmount==null}
         label='Pickup and Get OTP' 
-        className='p-button-info'
         onClick={onDepositeButtonClick}
         />
        

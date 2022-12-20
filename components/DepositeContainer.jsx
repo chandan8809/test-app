@@ -13,11 +13,11 @@ import { notify } from './Notify';
 
 const DepositeContainer = ({requestId}) => {
   const [showSRModal,setShowSRModal]=useState(false)
-  const [referenceNo,setReferenceNo]=useState(null)
-  const [file, setFile] = useState()
+  const [referenceNo,setReferenceNo]=useState("")
+  const [file, setFile] = useState(null)
   const [depositeRequestDetails,setDepositeRequestDetails]=useState()
   const {moneyDepositeUrl,setMoneyDepositeUrl,setGlobalLoader,depositeRequestDataAvailable}=useGlobalData()
-  const inputRef=useRef()
+  const inputRef=useRef(null)
 
   const router=useRouter()
 
@@ -73,7 +73,7 @@ const DepositeContainer = ({requestId}) => {
     <div className='flex items-center pt-8 gap-2'>
       <Image 
         src='/Back.svg' 
-        alt='Tez POS Logo' 
+        alt='Logo' 
         width={26} 
         height={26} 
         onClick={()=> router.push(`/collection/in-hand-collection`)}
@@ -121,12 +121,12 @@ const DepositeContainer = ({requestId}) => {
 
       <div className='flex flex-col p-2'>
         <p className='text-sm'>Reference Number</p>
-        <InputText value={referenceNo} onChange={(e) => setReferenceNo(e.target.value)} />
+        <InputText  autoComplete="off" value={referenceNo} maxLength="50" onChange={(e) => setReferenceNo(e.target.value)} />
       </div>
 
       <div className="form-group flex flex-col p-2">
           <label htmlFor="invoiceNumber" className='text-m text-gray'  >
-            Deposit Image Upload 
+            Deposit Slip Image
           </label>
           <input id="fileInput" type="file" ref={inputRef}
           onChange={handleFileChange}/>
@@ -135,9 +135,10 @@ const DepositeContainer = ({requestId}) => {
     </div>
     <div className='text-center  bottom-0 left-0 right-0 mx-auto'>
       <Button 
-        disabled={!referenceNo}
+        style={{width:"95%",maxWidth:"500px"}}
+        disabled={!referenceNo || !file}
         label='Deposit' 
-        className='p-button-info'
+        
         onClick={updateCollectionRequestDeposited}
         />
     </div>

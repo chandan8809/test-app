@@ -54,12 +54,12 @@ const LoginContainer = () => {
         </span>
 
         <span className="p-float-label mt-8" >
-          <Password 
-           
+          <InputText
+         
+          type={"password"} 
+            style={{width:"270px"}}
             value={password} 
             onChange={(e) => setPassword(e.target.value)} 
-            feedback={false} 
-            toggleMask
             className={errorLogin && "p-invalid block"} 
             onKeyDown={(e) => {
               (e.code === 'Enter' || e.code === 'NumpadEnter') && (username && password) && handleSubmit()
@@ -73,7 +73,7 @@ const LoginContainer = () => {
             disabled={!password || !username}
             loading={loadingBtn}
             label="Submit" 
-            className="p-button-info w-40"
+            className=" w-40"
             onClick={handleSubmit}
              />
         </div>

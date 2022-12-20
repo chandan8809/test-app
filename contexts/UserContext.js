@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async ( username, password ) => {
-    const response = await authServiceObj.login({username,password})
+    const response = await authServiceObj.login({username,password,client_type:"aom"})
     const loginResponse = {
       success: false,
       error: false,

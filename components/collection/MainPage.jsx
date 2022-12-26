@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 import { useGlobalData } from '../../contexts/GlobalContext';
 import { notify } from '../Notify';
 import {useAuth} from "../../contexts/UserContext"
-import { InputNumber } from 'primereact/inputnumber';
+import { InputText } from "primereact/inputtext";
 
 const MainPage = () => {
   const [showSRModal,setShowSRModal]=useState(false)
@@ -186,11 +186,12 @@ const MainPage = () => {
           //position={'top'}
           >
           <div className='pt-2 flex justify justify-center px-4'>
-            <InputNumber
+            <InputText
               autoFocus
               useGrouping={false}
+              type={'number'}
               value={SRNumber}
-              onChange={(e)=>setSRNumber(e.value)}
+              onChange={(e)=>setSRNumber(e.target.value)}
               onKeyDown={(e) => {
                 (e.code === 'Enter' || e.code === 'NumpadEnter') && getSRDetails()
               }}
@@ -198,7 +199,7 @@ const MainPage = () => {
           </div>
           <div className='mx-auto text-center mt-6'>
             <Button 
-             disabled={SRNumber==null}
+             disabled={!SRNumber}
              label="Submit" 
        
              loading={loadingSRBtn}

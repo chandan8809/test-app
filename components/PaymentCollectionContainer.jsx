@@ -2,7 +2,7 @@ import Image from 'next/image'
 import React, { useEffect, useRef, useState } from 'react'
 import { useGlobalData } from '../contexts/GlobalContext';
 import moment from "moment"
-import { InputNumber } from 'primereact/inputnumber';
+import {InputText} from "primereact/inputtext";
 import { useRouter } from 'next/router';
 import { Button } from 'primereact/button';
 import { collectionServiceObj } from '../services/collectionService';
@@ -170,15 +170,14 @@ const PaymentCollectionContainer = ({SRNumber}) => {
       <div className='flex flex-col p-2'>
         <p className='text-[16px] text-gray-900 mb-2'>{SRDetails?.instrument_mode_tag ==="CSH" ?"Cash Pickup Amount":"Cheque Amount"}</p>
       
-          <InputNumber 
+          <InputText
             autoComplete="off"
-            inputId="locale-indian" 
-            value={collectedAmount} 
-            onChange={(e) => setCollectedAmount(e.value)} 
-            mode="decimal" 
-            locale="en-IN" 
+            value={collectedAmount}
+            type={'number'}
+            onChange={(e) => setCollectedAmount(e.target.value)}
+            mode="decimal"
             maxFractionDigits={2}
-            className="p-inputtext-lg block"
+            className="p-inputtext"
             
             onKeyDown={(e) => {
               (e.code === 'Enter' || e.code === 'NumpadEnter') && onDepositeButtonClick()

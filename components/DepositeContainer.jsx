@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import { Button } from 'primereact/button'
-import { InputNumber } from 'primereact/inputnumber'
 import React, { useRef, useState, useEffect } from 'react'
 import { useRouter } from 'next/router';
 import { collectionServiceObj } from '../services/collectionService'

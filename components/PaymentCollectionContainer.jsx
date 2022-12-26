@@ -17,7 +17,7 @@ const PaymentCollectionContainer = ({SRNumber}) => {
   const [SRDetails,setSRDetails]=useState()
   const [counter, setCounter] = useState(0);
   const [startTimer,setStartTimer]=useState(false)
-  const [collectedAmount,setCollectedAmount]=useState(null)
+  const [collectedAmount,setCollectedAmount]=useState("")
   const [cameraModal,setCameraModal]=useState(false)
   const router=useRouter()
   const {moneyDepositeUrl,setMoneyDepositeUrl,setGlobalLoader}=useGlobalData()
@@ -170,23 +170,25 @@ const PaymentCollectionContainer = ({SRNumber}) => {
       <div className='flex flex-col p-2'>
         <p className='text-[16px] text-gray-900 mb-2'>{SRDetails?.instrument_mode_tag ==="CSH" ?"Cash Pickup Amount":"Cheque Amount"}</p>
       
-          <InputText
-            autoComplete="off"
-            value={collectedAmount}
-            type={'number'}
-            onChange={(e) => setCollectedAmount(e.target.value)}
-            mode="decimal"
-            maxFractionDigits={2}
-            className="p-inputtext"
-            
-            onKeyDown={(e) => {
-              (e.code === 'Enter' || e.code === 'NumpadEnter') && onDepositeButtonClick()
-              // getStocks(e.target.value)
+         {SRDetails?.status_tag === "CBP"?
+            <p className='text-[20px] font-bold'>{SRDetails?.request_amount}</p>: 
+            <InputText
+              autoComplete="off"
+              value={collectedAmount}
+              type={'number'}
+              onChange={(e) => setCollectedAmount(e.target.value)}
+              mode="decimal"
+              maxFractionDigits={2}
+              className="p-inputtext"
+              
+              onKeyDown={(e) => {
+                (e.code === 'Enter' || e.code === 'NumpadEnter') && onDepositeButtonClick()
+                // getStocks(e.target.value)
             }}
-            />
+            />}
       </div>
 
-     {SRDetails?.instrument_mode_tag ==="CHQ" && 
+     {SRDetails?.instrument_mode_tag ==="CHQ" && SRDetails?.status_tag === "CRQ" && 
       <div className="form-group flex flex-col p-2">
           <label htmlFor="invoiceNumber" className='text-m text-gray'  >
             Cheque Image
@@ -255,8 +257,8 @@ const PaymentCollectionContainer = ({SRNumber}) => {
       {counter !==0 && <p className='pb-4' style={{color:"#185DBF"}}>Please Share OTP (Retry sending OTP {counter})</p>}
       <Button 
        style={{width:"88%",maxWidth:"500px"}}
-        disabled={SRDetails?.instrument_mode_tag ==="CHQ" ?startTimer || collectedAmount==null || !file : startTimer || collectedAmount==null}
-        label='Pickup and Get OTP' 
+        disabled={SRDetails?.instrument_mode_tag ==="CHQ" ?startTimer || collectedAmount=="" || !file : startTimer || collectedAmount==""}
+        label={SRDetails?.status_tag === "CBP" ?"Resend OTP":"Pickup and Get OTP"}
         onClick={onDepositeButtonClick}
         />
        

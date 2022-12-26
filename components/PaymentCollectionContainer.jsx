@@ -30,7 +30,7 @@ const PaymentCollectionContainer = ({SRNumber}) => {
     if(counter===0){
       setStartTimer(false)
     }
-  }, [counter,startTimer]);
+  }, [counter,startTimer])
 
   useEffect(()=>{
       getSRDetails()

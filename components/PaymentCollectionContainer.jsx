@@ -117,6 +117,18 @@ const PaymentCollectionContainer = ({SRNumber}) => {
     setFile(event.target.files[0])
   }
 
+  const otpSendBtnDisable =()=>{
+    if(SRDetails?.instrument_mode_tag ==="CHQ" && SRDetails?.status_tag === "CRQ"){
+      return startTimer || collectedAmount=="" || !file
+    }
+    else if(SRDetails?.instrument_mode_tag ==="CSH" && SRDetails?.status_tag === "CRQ"){
+      return startTimer || collectedAmount==""
+    }
+    else{
+      return startTimer
+    }
+  }
+
   
   return (
     <div className=' px-4'>
@@ -257,7 +269,7 @@ const PaymentCollectionContainer = ({SRNumber}) => {
       {counter !==0 && <p className='pb-4' style={{color:"#185DBF"}}>Please Share OTP (Retry sending OTP {counter})</p>}
       <Button 
        style={{width:"88%",maxWidth:"500px"}}
-        disabled={SRDetails?.instrument_mode_tag ==="CHQ" ?startTimer || collectedAmount=="" || !file : startTimer || collectedAmount==""}
+        disabled={otpSendBtnDisable()}
         label={SRDetails?.status_tag === "CBP" ?"Resend OTP":"Pickup and Get OTP"}
         onClick={onDepositeButtonClick}
         />

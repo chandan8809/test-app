@@ -118,7 +118,6 @@ const PaymentCollectionContainer = ({SRNumber}) => {
   }
 
   const otpSendBtnDisable =()=>{
-    //SRDetails?.instrument_mode_tag ==="CHQ" ?startTimer || collectedAmount=="" || !file : startTimer || collectedAmount==""
     if(SRDetails?.instrument_mode_tag ==="CHQ" && SRDetails?.status_tag === "CRQ"){
       return startTimer || collectedAmount=="" || !file
     }

@@ -46,7 +46,7 @@ const ListPendingCollectionContainer = () => {
     setGlobalLoader(true)
     const response= await collectionServiceObj.getCollectionListPending()
     if(response.ok){
-      const responseData=response?.data?.reverse()
+      const responseData=response?.data?.sort((date1, date2) => new Date(date2.requested_at)-new Date(date1.requested_at))
       if(responseData.length===0){
         setShowEmptyMessage(true)
       }

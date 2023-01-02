@@ -40,7 +40,9 @@ const ListDepositedContainer = () => {
     setGlobalLoader(true)
     const response= await collectionServiceObj.getDepositedList()
     if(response.ok){
-      const responseData=response?.data?.reverse()
+    
+      const responseData=response?.data?.sort((date1, date2) => new Date(date2.deposited_at)-new Date(date1.deposited_at))
+
       if(responseData.length===0){
         setShowEmptyMessage(true)
       }

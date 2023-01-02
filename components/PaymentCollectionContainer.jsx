@@ -10,6 +10,7 @@ import { Dialog } from 'primereact/dialog';
 import Camera from './camera';
 import { Toast } from 'primereact/toast';
 import { notify } from './Notify';
+import { priceBodyTemplate } from './common/Helper';
 
 
 const PaymentCollectionContainer = ({SRNumber}) => {
@@ -183,7 +184,7 @@ const PaymentCollectionContainer = ({SRNumber}) => {
         <p className='text-[16px] text-gray-900 mb-2'>{SRDetails?.instrument_mode_tag ==="CSH" ?"Cash Pickup Amount":"Cheque Amount"}</p>
       
          {SRDetails?.status_tag === "CBP"?
-            <p className='text-[20px] font-bold'>{SRDetails?.request_amount}</p>: 
+            <p className='text-[20px] font-bold'>{priceBodyTemplate(SRDetails?.request_amount)}</p>: 
             <InputText
               autoComplete="off"
               value={collectedAmount}

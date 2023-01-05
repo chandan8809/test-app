@@ -4,7 +4,7 @@ import React, { useRef, useState, useEffect } from 'react'
 import { useRouter } from 'next/router';
 import { collectionServiceObj } from '../services/collectionService'
 import { priceBodyTemplate } from './common/Helper'
-import Camera from './camera'
+
 import { Dialog } from 'primereact/dialog'
 import { useGlobalData } from '../contexts/GlobalContext'
 import { InputText } from 'primereact/inputtext'
@@ -155,7 +155,7 @@ const DepositeContainer = ({requestId}) => {
           position={'top'}
           >
           <div className='mx-auto text-center mt-6'>
-            <Camera/>
+            {/* <Camera/> */}
          </div>
          <div className='text-center pt-8'>
          {moneyDepositeUrl && <Button onClick={() => setShowSRModal(false)} label='Done' className=' p-button-success'/>}

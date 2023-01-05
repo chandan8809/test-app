@@ -105,8 +105,7 @@ const MainPage = () => {
  
 
   return (
-    <div className='text-center px-4'>
-        
+    <div className='text-center px-4'>  
         <h1 className='text-xl font-semibold pt-10' style={{color:"#185DBF"}}>All Collections</h1>
         <div className='flex gap-2 justify-around pt-10 text-gray-700 '>
           <div 

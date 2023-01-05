@@ -7,7 +7,6 @@ import { useRouter } from 'next/router';
 import { Button } from 'primereact/button';
 import { collectionServiceObj } from '../services/collectionService';
 import { Dialog } from 'primereact/dialog';
-import Camera from './camera';
 import { Toast } from 'primereact/toast';
 import { notify } from './Notify';
 import { priceBodyTemplate } from './common/Helper';
@@ -255,7 +254,7 @@ const PaymentCollectionContainer = ({SRNumber}) => {
           position={'top'}
           >
           <div className='mx-auto text-center mt-6'>
-            <Camera/>
+            {/* <Camera/> */}
          </div>
          <div className='text-center pt-8'>
          {moneyDepositeUrl && <Button onClick={() => setCameraModal(false)} label='Done' className=' p-button-success'/>}

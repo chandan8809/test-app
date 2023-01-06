@@ -14,7 +14,9 @@ import { priceBodyTemplate } from '../common/Helper';
 
 
 const ListPendingCollectionContainer = () => {
-  const [inHandCollectionList,setInHandCollectionList]=useState([])
+  const [modalDataStoreWise,setModalDataStoreWise]=useState([])
+  const [showStoreData,setShowStoreData]=useState(false)
+  const [pendingCollectionList,setPendingCollectionList]=useState([])
   const [dataForSearch,setDataForSearch]=useState([])
   const [activeIndex,setActiveIndex]=useState(0)
   const [showEmptyMessage,setShowEmptyMessage]=useState(false)
@@ -50,7 +52,8 @@ const ListPendingCollectionContainer = () => {
       if(responseData.length===0){
         setShowEmptyMessage(true)
       }
-      setInHandCollectionList(responseData)
+     
+      setPendingCollectionList(responseData)
       setDataForFilter(responseData)
       setDataForSearch(responseData)
     }
@@ -79,13 +82,13 @@ const ListPendingCollectionContainer = () => {
 
   const selectCashOrCheque=(data)=>{
     if(data==="All"){
-      setInHandCollectionList(dataForFilter)
+      setPendingCollectionList(dataForFilter)
       setDataForSearch(dataForFilter)
       setSearchVal("")
       return;
     }
     const cashFilter=dataForFilter.filter(item=>item.instrument_mode==data)
-    setInHandCollectionList(cashFilter)
+    setPendingCollectionList(cashFilter)
     setDataForSearch(cashFilter)
     setSearchVal("")
   }
@@ -98,8 +101,45 @@ const ListPendingCollectionContainer = () => {
 
   const searchByStoreName = (data)=>{
     const searchedStore = dataForSearch.filter(item=>item.source_name.toLowerCase().includes(data.trim().toLowerCase()))
-    setInHandCollectionList(searchedStore)
+    setPendingCollectionList(searchedStore)
   }
+
+
+  const convertDataIntoStorewise=(data)=>{
+    const _items = [...data]
+    const storeItems = {}
+    for (let index = 0; index < _items.length; index++) {
+        const item = _items[index];
+        if (!storeItems[item.source_name]) {
+            storeItems[item.source_name] = {
+              ...item,
+              CASH:item.instrument_mode_tag==="CSH" ? item.request_amount : 0 ,
+              CHEQUE:item.instrument_mode_tag==="CHQ" ? item.request_amount : 0,
+            }
+        } else {
+            storeItems[item.source_name] = {
+                ...storeItems[item.source_name],
+                request_amount: storeItems[item.source_name].request_amount + item.request_amount,
+                CASH: storeItems[item.source_name].CASH + (item.instrument_mode_tag==="CSH" ? item.request_amount : 0),
+                CHEQUE: storeItems[item.source_name].CHEQUE + (item.instrument_mode_tag==="CHQ" ? item.request_amount : 0),
+            }
+        }
+     }
+     return storeItems
+  }
+
+  const openCashChequeListModal=(data)=>{
+ 
+    const cashChequeModalData = pendingCollectionList.filter(each=>each.source_name===data.source_name)
+    
+    setModalDataStoreWise(cashChequeModalData)
+    setShowStoreData(true)
+
+  }
+
+  
+ const storeWiseData= convertDataIntoStorewise(pendingCollectionList)
+
 
   return (
       <div>
@@ -152,26 +192,67 @@ const ListPendingCollectionContainer = () => {
 
           <div className='flex flex-col  justify-around text-gray-700 px-4 pb-6'>
 
-            {inHandCollectionList.map((item,index)=>(
+            {Object.values(storeWiseData).map((item,index)=>(
 
              <div key={index} 
-               className='flex-1 rounded-xl flex p-2 bg-gray-100 shadow-md justify-between mt-3 '>
-               <div className='flex flex-col flex-[60%]'>
-                  <p className='text-[16px]  font-semibold  mt-0.5'>{item?.instrument_mode}</p>
-                  <p className=' mt-0.5 text-xs'>Store : {item?.source_name}</p>
-                  <p className=' mt-0.5 text-xs'>Request Date : {moment(item.requested_at).utc().format('Do MMM, YYYY')}</p>
+               onClick={()=>openCashChequeListModal(item)}
+               className='flex-1 rounded-xl flex p-2 bg-gray-100 shadow-md justify-between mt-4'
+               >
+               <div className='flex flex-col  w-[50%]'>
+                  <p className=' mt-0.5 text-md'>{item?.source_name}</p>
+                  <p className=' mt-0.5 text-xs'>Req Date : {moment(item.requested_at).utc().format('Do MMM, YYYY')}</p>
                </div>
-               <div className='flex flex-col felx-[40%] justify-between'>
-                 <p className='text-[18px] font-bold text-right'>{priceBodyTemplate(item?.request_amount)}</p>
-                 
+
+               <div className='flex flex-col justify-between  w-[25%]'>
+                 <p className='text-[16px] mt-0 text-center'>{"CASH"}</p>
+                 <p className='text-[18px] font-bold  text-center'>{priceBodyTemplate(item?.CASH)}</p>
+               </div>
+
+               <div className='flex flex-col justify-between w-[25%]'>
+                 <p className='text-[16px]  mt-0.5 text-center'>{"CHEQUE"}</p>
+                 <p className='text-[18px] font-bold  text-center'>{priceBodyTemplate(item?.CHEQUE)}</p>
                </div>
              </div>
 
             ))}
 
             {showEmptyMessage && <p className='text-base mt-10 text-center text-gray-500'>No Pending collection</p>}
-           
           </div>
+
+          <Dialog 
+            header={modalDataStoreWise[0]?.source_name}
+            visible={showStoreData} 
+            onHide={() => {
+              setShowStoreData(false)
+             
+            }} 
+            breakpoints={{'960px': '75vw'}} 
+            //position={'top'}
+           
+            >
+               
+              <div className='flex flex-col  justify-around text-gray-700 px-4 pb-6'>
+
+                {modalDataStoreWise.map((item,index)=>(
+
+                <div key={index} 
+                  className='flex-1 rounded-xl flex p-2 bg-gray-100 shadow-md justify-between mt-3 '>
+                  <div className='flex flex-col flex-[60%]'>
+                      <p className='text-[16px]  font-semibold  mt-0.5'>{item?.instrument_mode}</p>
+                      <p className=' mt-0.5 text-xs'>Store : {item?.source_name}</p>
+                      <p className=' mt-0.5 text-xs'>Request Date : {moment(item.requested_at).utc().format('Do MMM, YYYY')}</p>
+                  </div>
+                  <div className='flex flex-col felx-[40%] justify-between'>
+                    <p className='text-[18px] font-bold text-right'>{priceBodyTemplate(item?.request_amount)}</p>
+                    
+                  </div>
+                </div>
+
+                ))}
+                </div>
+           
+          </Dialog>
+
           <Dialog 
             header="Enter Pickup OTP" 
             visible={showSRModal} 
@@ -180,6 +261,7 @@ const ListPendingCollectionContainer = () => {
               setSRNumber(null)
             }} 
             breakpoints={{'960px': '75vw'}} 
+          
             //position={'top'}
             >
             <div className='pt-2 flex justify justify-center px-4'>

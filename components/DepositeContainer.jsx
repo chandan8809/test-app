@@ -142,27 +142,7 @@ const DepositeContainer = ({requestId}) => {
         />
     </div>
 
-      <div className='bottom-8 absolute left-0 right-0 mx-auto'>
-        <Dialog 
-          header="Click Picture" 
-          visible={showSRModal} 
-          onHide={() => {
-            setShowSRModal(false)
-            setMoneyDepositeUrl(null)
-          }} 
-          breakpoints={{'960px': '75vw'}} 
-          style={{width: '90vw',minHeight:"400px"}}
-          position={'top'}
-          >
-          <div className='mx-auto text-center mt-6'>
-            {/* <Camera/> */}
-         </div>
-         <div className='text-center pt-8'>
-         {moneyDepositeUrl && <Button onClick={() => setShowSRModal(false)} label='Done' className=' p-button-success'/>}
-         </div>
-         
-        </Dialog>
-      </div>
+     
 </div>
     
   )

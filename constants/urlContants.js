@@ -1,1 +1,1 @@
-export const SAMAAN_HOST_URL = 'https://smuat.apnamart.in';
+export const SAMAAN_HOST_URL = process.env.NEXT_PUBLIC_API_URL

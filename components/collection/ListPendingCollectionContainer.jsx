@@ -82,16 +82,17 @@ const ListPendingCollectionContainer = () => {
 
   const selectCashOrCheque=(data)=>{
     if(data==="All"){
-      setPendingCollectionList(dataForFilter)
-      setDataForSearch(dataForFilter)
-      setSearchVal("")
+      setModalDataStoreWise(dataForFilter)
+      
+   
       return;
     }
     const cashFilter=dataForFilter.filter(item=>item.instrument_mode==data)
-    setPendingCollectionList(cashFilter)
-    setDataForSearch(cashFilter)
-    setSearchVal("")
+    setModalDataStoreWise(cashFilter)
+   
+   
   }
+
 
   const gotoCollectionPage=()=>{
     router.push({
@@ -102,6 +103,7 @@ const ListPendingCollectionContainer = () => {
   const searchByStoreName = (data)=>{
     const searchedStore = dataForSearch.filter(item=>item.source_name.toLowerCase().includes(data.trim().toLowerCase()))
     setPendingCollectionList(searchedStore)
+    
   }
 
 
@@ -134,6 +136,7 @@ const ListPendingCollectionContainer = () => {
     
     setModalDataStoreWise(cashChequeModalData)
     setShowStoreData(true)
+    setDataForFilter(cashChequeModalData)
 
   }
 
@@ -159,19 +162,7 @@ const ListPendingCollectionContainer = () => {
             <Button  className='p-button-sm'  onClick={() => setShowSRModal(true)} >Pickup OTP</Button>
           </div>
         
-          <div className='pt-5 flex justify-center'>
-          <TabMenu 
-           
-            model={items} 
-            activeIndex={activeIndex} 
-            className="p-tabmenu-nav w-[240px]" 
-            onTabChange={(e) => {
-              setActiveIndex(e.index)
-              selectCashOrCheque(e.value.label)
-              topFunction()
-            }} 
-            />
-          </div>
+         
 
           <div className='pt-5 text-center'>
            <InputText 
@@ -220,7 +211,7 @@ const ListPendingCollectionContainer = () => {
           </div>
 
           <Dialog 
-            header={modalDataStoreWise[0]?.source_name}
+            header={modalDataStoreWise[0]?.source_name ?? "NO CASH CHEQUE"}
             visible={showStoreData} 
             onHide={() => {
               setShowStoreData(false)
@@ -230,6 +221,19 @@ const ListPendingCollectionContainer = () => {
             //position={'top'}
            
             >
+               <div className='pt-5 flex justify-center'>
+                <TabMenu 
+                
+                  model={items} 
+                  activeIndex={activeIndex} 
+                  className="p-tabmenu-nav w-[240px]" 
+                  onTabChange={(e) => {
+                    setActiveIndex(e.index)
+                    selectCashOrCheque(e.value.label)
+                    topFunction()
+                  }} 
+                  />
+                </div>
                
               <div className='flex flex-col  justify-around text-gray-700 px-4 pb-6'>
 

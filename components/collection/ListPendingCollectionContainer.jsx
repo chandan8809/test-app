@@ -15,6 +15,7 @@ import { priceBodyTemplate } from '../common/Helper';
 
 const ListPendingCollectionContainer = () => {
   const [modalDataStoreWise,setModalDataStoreWise]=useState([])
+  const [storeName,setStoreName]=useState("")
   const [showStoreData,setShowStoreData]=useState(false)
   const [pendingCollectionList,setPendingCollectionList]=useState([])
   const [dataForSearch,setDataForSearch]=useState([])
@@ -83,14 +84,10 @@ const ListPendingCollectionContainer = () => {
   const selectCashOrCheque=(data)=>{
     if(data==="All"){
       setModalDataStoreWise(dataForFilter)
-      
-   
       return;
     }
     const cashFilter=dataForFilter.filter(item=>item.instrument_mode==data)
     setModalDataStoreWise(cashFilter)
-   
-   
   }
 
 
@@ -103,7 +100,6 @@ const ListPendingCollectionContainer = () => {
   const searchByStoreName = (data)=>{
     const searchedStore = dataForSearch.filter(item=>item.source_name.toLowerCase().includes(data.trim().toLowerCase()))
     setPendingCollectionList(searchedStore)
-    
   }
 
 
@@ -135,6 +131,7 @@ const ListPendingCollectionContainer = () => {
     const cashChequeModalData = pendingCollectionList.filter(each=>each.source_name===data.source_name)
     
     setModalDataStoreWise(cashChequeModalData)
+    setStoreName(data.source_name)
     setShowStoreData(true)
     setDataForFilter(cashChequeModalData)
 
@@ -187,7 +184,7 @@ const ListPendingCollectionContainer = () => {
 
              <div key={index} 
                onClick={()=>openCashChequeListModal(item)}
-               className='flex-1 rounded-xl flex p-2 bg-gray-100 shadow-md justify-between mt-4'
+               className='flex-1 rounded-xl flex py-2 md:px-2 bg-gray-100 shadow-md justify-between mt-4'
                >
                <div className='flex flex-col  w-[50%]'>
                   <p className=' mt-0.5 text-md'>{item?.source_name}</p>
@@ -195,7 +192,7 @@ const ListPendingCollectionContainer = () => {
                </div>
 
                <div className='flex flex-col justify-between  w-[25%]'>
-                 <p className='text-[16px] mt-0 text-center'>{"CASH"}</p>
+                 <p className='text-[16px] mt-0.5 text-center'>{"CASH"}</p>
                  <p className='text-[18px] font-bold  text-center'>{priceBodyTemplate(item?.CASH)}</p>
                </div>
 
@@ -211,17 +208,21 @@ const ListPendingCollectionContainer = () => {
           </div>
 
           <Dialog 
-            header={modalDataStoreWise[0]?.source_name ?? "NO CASH CHEQUE"}
+            header={storeName}
             visible={showStoreData} 
             onHide={() => {
               setShowStoreData(false)
+              setActiveIndex(0)
+              setSearchVal("")
+              searchByStoreName("")
              
             }} 
             breakpoints={{'960px': '75vw'}} 
-            //position={'top'}
+            position={'top-left'}
+            style={{width:"100vw",maxWidth:"400px"}}
            
             >
-               <div className='pt-5 flex justify-center'>
+               <div className='pt-5 flex justify-center sticky top-0 bg-white'>
                 <TabMenu 
                 
                   model={items} 
@@ -243,7 +244,7 @@ const ListPendingCollectionContainer = () => {
                   className='flex-1 rounded-xl flex p-2 bg-gray-100 shadow-md justify-between mt-3 '>
                   <div className='flex flex-col flex-[60%]'>
                       <p className='text-[16px]  font-semibold  mt-0.5'>{item?.instrument_mode}</p>
-                      <p className=' mt-0.5 text-xs'>Store : {item?.source_name}</p>
+                     
                       <p className=' mt-0.5 text-xs'>Request Date : {moment(item.requested_at).utc().format('Do MMM, YYYY')}</p>
                   </div>
                   <div className='flex flex-col felx-[40%] justify-between'>

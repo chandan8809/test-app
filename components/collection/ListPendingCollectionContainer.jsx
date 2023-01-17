@@ -185,13 +185,13 @@ const ListPendingCollectionContainer = () => {
          </div>
           
 
-          <div className='flex flex-col  justify-around text-gray-700 px-4 pb-6 border'>
+          <div className='flex flex-col  justify-around text-gray-700 px-4 pb-6'>
 
             {Object.values(storeWiseData).map((item,index)=>(
 
              <div key={index} 
                onClick={()=>openCashChequeListModal(item)}
-               className='h-[90px] rounded-xl flex py-2 md:px-2 bg-gray-100 shadow-md justify-between mt-4'
+               className='h-[90px] rounded-xl flex py-2 pl-0.5 md:px-2 bg-gray-100 shadow-md justify-between mt-4'
                >
                <div className='flex flex-col  w-[50%]'>
                   <p className=' mt-0.5 text-md'>{excerpt(item?.source_name,26)}</p>
@@ -203,7 +203,7 @@ const ListPendingCollectionContainer = () => {
                  <p className='text-[18px] font-bold  text-center'>{priceBodyTemplate(item?.CASH)}</p>
                </div>
 
-               <div className='flex flex-col justify-between w-[25%]'>
+               <div className='flex flex-col justify-between w-[25%] ml-3'>
                  <p className='text-[16px]  mt-0.5 text-center'>{"CHEQUE"}</p>
                  <p className='text-[18px] font-bold  text-center'>{priceBodyTemplate(item?.CHEQUE)}</p>
                </div>

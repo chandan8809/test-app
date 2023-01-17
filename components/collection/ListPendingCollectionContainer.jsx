@@ -36,6 +36,13 @@ const ListPendingCollectionContainer = () => {
     {label: 'Cheque'},
   ];
 
+  const excerpt=(str,count)=>{
+    if(str.length>count){
+        str=str.substring(0,count)+"..."
+    }
+    return str
+  }
+
   useEffect(()=>{
     getCollectionListPending()
   },[])
@@ -178,16 +185,16 @@ const ListPendingCollectionContainer = () => {
          </div>
           
 
-          <div className='flex flex-col  justify-around text-gray-700 px-4 pb-6'>
+          <div className='flex flex-col  justify-around text-gray-700 px-4 pb-6 border'>
 
             {Object.values(storeWiseData).map((item,index)=>(
 
              <div key={index} 
                onClick={()=>openCashChequeListModal(item)}
-               className='flex-1 rounded-xl flex py-2 md:px-2 bg-gray-100 shadow-md justify-between mt-4'
+               className='h-[90px] rounded-xl flex py-2 md:px-2 bg-gray-100 shadow-md justify-between mt-4'
                >
                <div className='flex flex-col  w-[50%]'>
-                  <p className=' mt-0.5 text-md'>{item?.source_name}</p>
+                  <p className=' mt-0.5 text-md'>{excerpt(item?.source_name,26)}</p>
                   <p className=' mt-0.5 text-xs'>Req Date : {moment(item.requested_at).utc().format('Do MMM, YYYY')}</p>
                </div>
 

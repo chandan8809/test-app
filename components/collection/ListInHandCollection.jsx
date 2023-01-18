@@ -50,7 +50,8 @@ const ListInHandCollection = () => {
     const response= await collectionServiceObj.getCollectionListingInHand()
    
     if(response.ok){
-      const responseData=response.data.reverse()
+      
+      const responseData=response.data.sort((date1, date2) => new Date(date2.completed_at)-new Date(date1.completed_at))
       if(responseData.length===0){
         setShowEmptyMessage(true)
       }

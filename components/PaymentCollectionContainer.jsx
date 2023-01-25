@@ -7,9 +7,9 @@ import { useRouter } from 'next/router';
 import { Button } from 'primereact/button';
 import { collectionServiceObj } from '../services/collectionService';
 import { Dialog } from 'primereact/dialog';
-import Camera from './camera';
 import { Toast } from 'primereact/toast';
 import { notify } from './Notify';
+import { priceBodyTemplate } from './common/Helper';
 
 
 const PaymentCollectionContainer = ({SRNumber}) => {
@@ -18,7 +18,6 @@ const PaymentCollectionContainer = ({SRNumber}) => {
   const [counter, setCounter] = useState(0);
   const [startTimer,setStartTimer]=useState(false)
   const [collectedAmount,setCollectedAmount]=useState("")
-  const [cameraModal,setCameraModal]=useState(false)
   const router=useRouter()
   const {moneyDepositeUrl,setMoneyDepositeUrl,setGlobalLoader}=useGlobalData()
   const inputRef=useRef()
@@ -183,7 +182,7 @@ const PaymentCollectionContainer = ({SRNumber}) => {
         <p className='text-[16px] text-gray-900 mb-2'>{SRDetails?.instrument_mode_tag ==="CSH" ?"Cash Pickup Amount":"Cheque Amount"}</p>
       
          {SRDetails?.status_tag === "CBP"?
-            <p className='text-[20px] font-bold'>{SRDetails?.request_amount}</p>: 
+            <p className='text-[20px] font-bold'>{priceBodyTemplate(SRDetails?.request_amount)}</p>: 
             <InputText
               autoComplete="off"
               value={collectedAmount}
@@ -208,60 +207,10 @@ const PaymentCollectionContainer = ({SRNumber}) => {
           <input id="fileInput" type="file" ref={inputRef}
           onChange={handleFileChange}/>
       </div>
-      // <div className='flex flex-col p-2'>
-      //   <p className='text-sm'>Cheque Image</p>
-      //   <div 
-      //     className='flex items-center gap-2'
-          
-      //     >
-      //     <Image 
-      //       src='/openCamera.svg' 
-      //       alt='Tez POS Logo' 
-      //       width={34} 
-      //       height={34}
-            
-      //       />
-            
-      //     <h1 
-      //       onClick={() => setCameraModal(true)} 
-      //       className='text-sm text-blue-700'>{moneyDepositeUrl ? "Dummy Image name" : "Upload File or Open Camera"}
-      //     </h1>
-
-      //     {moneyDepositeUrl && <Button 
-      //       onClick={() => {
-      //         setMoneyDepositeUrl(null)
-      //         }} 
-      //       icon="pi pi-times" 
-      //       className="p-button-rounded p-button-danger p-button-text" 
-      //       aria-label="Cancel"
-      //     />}
-            
-      //   </div>
-      // </div>
-
+      
       }
 
-      <div className='bottom-8 absolute left-0 right-0 mx-auto'>
-        <Dialog 
-          header="Click Picture" 
-          visible={cameraModal} 
-          onHide={() => {
-            setCameraModal(false)
-            setMoneyDepositeUrl(null)
-          }} 
-          breakpoints={{'960px': '75vw'}} 
-          style={{width: '90vw',minHeight:"400px"}}
-          position={'top'}
-          >
-          <div className='mx-auto text-center mt-6'>
-            <Camera/>
-         </div>
-         <div className='text-center pt-8'>
-         {moneyDepositeUrl && <Button onClick={() => setCameraModal(false)} label='Done' className=' p-button-success'/>}
-         </div>
-         
-        </Dialog>
-      </div>
+      
 
     </div>
 

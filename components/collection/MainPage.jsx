@@ -105,8 +105,7 @@ const MainPage = () => {
  
 
   return (
-    <div className='text-center px-4'>
-        
+    <div className='text-center px-4'>  
         <h1 className='text-xl font-semibold pt-10' style={{color:"#185DBF"}}>All Collections</h1>
         <div className='flex gap-2 justify-around pt-10 text-gray-700 '>
           <div 
@@ -141,23 +140,21 @@ const MainPage = () => {
 
         <div className='flex flex-col gap-2 justify-around pt-14 text-gray-700 '>
           <div 
-            className='flex-1 rounded-xl flex justify-between  bg-gray-100 gap-4 p-4 active:bg-gray-200 cursor-pointer'
-            onClick={goToListInHandPage}
-            >
-            <p className='text-[18px] font-semibold'>In Hand Collections</p>
-            <Image src='/ArrowSign.svg' alt='Logo' width={12} height={22} />
-           
-
-          </div>
-          <div 
             className='flex-1 rounded-xl flex justify-between bg-gray-100 gap-4 p-4 active:bg-gray-200 cursor-pointer'
             onClick={goToListPendingCollection}
             >
             <p className='text-[18px] font-semibold'>Pending Requests</p>
             <Image src='/ArrowSign.svg' alt='Logo' width={12} height={22} />
-          
-
           </div>
+
+          <div 
+            className='flex-1 rounded-xl flex justify-between  bg-gray-100 gap-4 p-4 active:bg-gray-200 cursor-pointer'
+            onClick={goToListInHandPage}
+            >
+            <p className='text-[18px] font-semibold'>In Hand Collections</p>
+            <Image src='/ArrowSign.svg' alt='Logo' width={12} height={22} />
+          </div>
+      
 
           <div 
             className='flex-1 rounded-xl flex justify-between bg-gray-100 gap-4 p-4 active:bg-gray-200 cursor-pointer'

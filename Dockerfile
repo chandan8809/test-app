@@ -1,15 +1,22 @@
-FROM node:lts as dependencies
-
+FROM node:latest
 WORKDIR /app
-COPY ["package.json", "package-lock.json", "./"]
-RUN npm ci
 
-FROM node:lts as builder
+# Copy the package.json and package-lock.json files to the container
+COPY package*.json ./
 
-WORKDIR /app
-COPY --from=dependencies /app/node_modules ./node_modules
+# Install dependencies
+RUN npm install
+
+RUN npm install -g serve
+
+# Copy the remaining application files to the container
 COPY . .
-RUN yarn build
+
+# Build the application
+ARG ENV_NAME
+RUN npm run build:$ENV_NAME
 
 EXPOSE 3000
-CMD ["yarn", "start"]
+
+# Set the command to run when the container starts
+CMD serve -s build

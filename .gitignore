@@ -40,3 +40,6 @@ next-env.d.ts
 
 # Environments
 .env*.local
+
+# Sentry Auth Token
+.sentryclirc

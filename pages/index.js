@@ -19,24 +19,24 @@ export default function Home() {
   };
 
 
-  useEffect(() => {
-    const sessionUserData = getSessionUserData();
-    if (sessionUserData) {
-        if (!sessionUserData.user_data) {
-            router.push({
-                pathname: '/login',
-            });
-        }
-        else{
-          router.push({
-            pathname: '/collection',
-          });
-        }
-    } else {
-        logout();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   const sessionUserData = getSessionUserData();
+  //   if (sessionUserData) {
+  //       if (!sessionUserData.user_data) {
+  //           router.push({
+  //               pathname: '/login',
+  //           });
+  //       }
+  //       else{
+  //         router.push({
+  //           pathname: '/collection',
+  //         });
+  //       }
+  //   } else {
+  //       logout();
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   return (
     <div className='flex flex-col  items-center  h-screen gap-6'>

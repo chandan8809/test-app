@@ -17,19 +17,21 @@ const LoginContainer = () => {
 
 
   const handleSubmit=async()=>{
-    setLoadingBtn(true)
-    const loginResponse = await login(username,password);
+    // setLoadingBtn(true)
+    // const loginResponse = await login(username,password);
     
-    const { success, error } = loginResponse ?? {};
-    if (error) {
-      notify("error","wrong password or username")
-      setErrorLogin(true)
+    // const { success, error } = loginResponse ?? {};
+    // if (error) {
+    //   notify("error","wrong password or username")
+    //   setErrorLogin(true)
     
-    } else if (success) {
-      setErrorLogin(false)
-      router.push(`/collection`)
-    }
-    setLoadingBtn(false)
+    // } else if (success) {
+    //   setErrorLogin(false)
+    //   router.push(`/collection`)
+    // }
+    // setLoadingBtn(false)
+
+    router.push(`/collection`)
   }
   
  

@@ -22,9 +22,9 @@ const MainPage = () => {
   const [logoutDialog,setLogoutDialog]=useState(false)
 
 
-  useEffect(()=>{
-    getAllCollection()
-  },[])
+  // useEffect(()=>{
+  //   getAllCollection()
+  // },[])
 
   const getSRDetails = async()=>{
     setLoadingSRBtn(true)
@@ -71,15 +71,10 @@ const MainPage = () => {
 
 
 
-  const goToListInHandPage=()=>{
-    router.push({
-      pathname: `/collection/in-hand-collection`,
-    });
-  }
 
-  const goToListPendingCollection=()=>{
+  const goToTestpage=()=>{
     router.push({
-      pathname: `/collection/pending-collection`,
+      pathname: `/mock-test`,
     });
   }
 
@@ -89,41 +84,26 @@ const MainPage = () => {
     });
   }
 
-  const goToListInHandPageCash=()=>{
-    router.push({
-      pathname: `/collection/in-hand-collection`,
-      query:{request:"Cash"}
-    });
-  }
-
-  const goToListInHandPageCheque=()=>{
-    router.push({
-      pathname: `/collection/in-hand-collection`,
-      query:{request:"Cheque"}
-    });
-  }
  
 
   return (
     <div className='text-center px-4'>  
-        <h1 className='text-xl font-semibold pt-10' style={{color:"#185DBF"}}>All Collections</h1>
+        <h1 className='text-xl font-semibold pt-10' style={{color:"#185DBF"}}>Dashbord</h1>
         <div className='flex gap-2 justify-around pt-10 text-gray-700 '>
           <div 
             className={`flex-1 cursor-pointer rounded-xl flex flex-col p-2 bg-green-100 shadow-md ${exceedLimit && "border-red-500 border"}`}
-            onClick={goToListInHandPageCash}
+            // onClick={goToListInHandPageCash}
             >
-            <p className='text-[18px] font-light text-gray-500'>Cash in Hand</p>
+            <p className='text-[18px] font-light text-gray-500'>Total Marks</p>
             <p className='text-xl font-bold mt-1'>{collectionSummary?.cash?.amount ? priceBodyTemplate(collectionSummary?.cash?.amount) :"---"}</p>
-            <p className='text-gray-500 mt-0.5 text-sm'>({collectionSummary?.cash?.n_stores} Stores)</p>
 
           </div>
           <div 
             className={`flex-1 cursor-pointer rounded-xl flex flex-col p-2 bg-blue-100 shadow-md`}
-            onClick={goToListInHandPageCheque}
+            // onClick={goToListInHandPageCheque}
             >
-            <p className='text-[18px] font-light text-gray-500'>Cheques in Hand</p>
+            <p className='text-[18px] font-light text-gray-500'>Rank</p>
             <p className='text-xl font-bold mt-1'>{collectionSummary?.cheque?.count ?? "---"}</p>
-            <p className='text-gray-500 mt-0.5 text-sm'>({collectionSummary?.cheque?.n_stores} Stores)</p>
           </div>
         </div>
 
@@ -141,26 +121,19 @@ const MainPage = () => {
         <div className='flex flex-col gap-2 justify-around pt-14 text-gray-700 '>
           <div 
             className='flex-1 rounded-xl flex justify-between bg-gray-100 gap-4 p-4 active:bg-gray-200 cursor-pointer'
-            onClick={goToListPendingCollection}
+            onClick={goToTestpage}
             >
-            <p className='text-[18px] font-semibold'>Pending Requests</p>
+            <p className='text-[18px] font-semibold'>Mock Tests</p>
             <Image src='/ArrowSign.svg' alt='Logo' width={12} height={22} />
           </div>
 
-          <div 
-            className='flex-1 rounded-xl flex justify-between  bg-gray-100 gap-4 p-4 active:bg-gray-200 cursor-pointer'
-            onClick={goToListInHandPage}
-            >
-            <p className='text-[18px] font-semibold'>In Hand Collections</p>
-            <Image src='/ArrowSign.svg' alt='Logo' width={12} height={22} />
-          </div>
-      
+         
 
           <div 
             className='flex-1 rounded-xl flex justify-between bg-gray-100 gap-4 p-4 active:bg-gray-200 cursor-pointer'
             onClick={goToListDeposited}
             >
-            <p className='text-[18px] font-semibold'>Deposited</p>
+            <p className='text-[18px] font-semibold'>Daily News</p>
             <Image src='/ArrowSign.svg' alt='Logo' width={12} height={22} />
           </div>
         </div>
@@ -170,7 +143,7 @@ const MainPage = () => {
         </div>
        
         <div className='bottom-8 absolute left-0 right-0 mx-auto'>
-        <Button style={{width:"90%",maxWidth:"500px"}} label='Enter Pickup OTP'  icon="pi pi-external-link" onClick={() => setShowSRModal(true)} />
+        <Button style={{width:"90%",maxWidth:"500px"}} label='Start Test'  icon="pi pi-external-link" onClick={() => setShowSRModal(true)} />
         <Dialog 
           header="Enter Pickup OTP" 
           visible={showSRModal} 

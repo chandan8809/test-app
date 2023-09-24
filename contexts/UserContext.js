@@ -27,19 +27,19 @@ export const AuthProvider = ({ children }) => {
   const router = useRouter();
 
 
-  React.useEffect(() => {
-    const sessionUserData = getSessionUserData();
-    if (sessionUserData) {
-      setUserData(() => sessionUserData);
-      setAuthed(() => true);
+  // React.useEffect(() => {
+  //   const sessionUserData = getSessionUserData();
+  //   if (sessionUserData) {
+  //     setUserData(() => sessionUserData);
+  //     setAuthed(() => true);
      
-    } else {
-      setAuthed(() => false);
-      setUserData(() => null);
-      logout();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  //   } else {
+  //     setAuthed(() => false);
+  //     setUserData(() => null);
+  //     logout();
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   const login = async ( username, password ) => {
     const response = await authServiceObj.login({username,password,client_app:"aom"})
